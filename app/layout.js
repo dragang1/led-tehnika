@@ -1,16 +1,10 @@
-import localFont from "next/font/local";
+import { Outfit } from "next/font/google";
 import "./globals.css";
+import Header from "./_components/Header";
+import Footer from "./_components/Footer";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const inter = Outfit({ subsets: ['latin'] })
+
 
 export const metadata = {
   title: "Create Next App",
@@ -21,9 +15,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={inter.className}
       >
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
