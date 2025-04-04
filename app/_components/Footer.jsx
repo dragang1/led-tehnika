@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
+import Link from 'next/link'
 
 function Footer() {
     return (
@@ -8,13 +9,14 @@ function Footer() {
                 <div
                     className="flex flex-col items-center gap-4 rounded-lg bg-indigo-600 p-6 shadow-lg sm:flex-row sm:justify-between"
                 >
-                    <strong className="text-xl text-white sm:text-xl"> Make Your Next Career Move! </strong>
+                    <strong className="text-xl text-white sm:text-xl"> Tu me cijene tu kupujem! </strong>
 
-                    <a
+                    <Link href={'/products'}
                         className="inline-flex items-center gap-2 rounded-full border border-white bg-white px-8 py-3 text-indigo-600 hover:bg-transparent hover:text-white focus:outline-none focus:ring active:bg-white/90"
-                        href="#"
+
                     >
-                        <span className="text-sm font-medium"> Let's Get Started </span>
+
+                        <span className="text-sm font-medium"> Idi na artikle </span>
 
                         <svg
                             className="size-5 rtl:rotate-180"
@@ -30,9 +32,9 @@ function Footer() {
                                 d="M17 8l4 4m0 0l-4 4m4-4H3"
                             />
                         </svg>
-                    </a>
+                    </Link>
                 </div>
-
+                {/* 
                 <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     <div className="text-center sm:text-left">
                         <p className="text-lg font-medium text-gray-900">About Us</p>
@@ -143,12 +145,12 @@ function Footer() {
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="mt-16">
                     <ul className="flex justify-center gap-6 sm:justify-end">
                         <li>
-                            <a
+                            <Link
                                 href="#"
                                 rel="noreferrer"
                                 target="_blank"
@@ -162,11 +164,11 @@ function Footer() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                            </a>
+                            </Link>
                         </li>
 
                         <li>
-                            <a
+                            <Link
                                 href="#"
                                 rel="noreferrer"
                                 target="_blank"
@@ -180,11 +182,11 @@ function Footer() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                            </a>
+                            </Link>
                         </li>
 
                         <li>
-                            <a
+                            <Link
                                 href="#"
                                 rel="noreferrer"
                                 target="_blank"
@@ -196,11 +198,11 @@ function Footer() {
                                         d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"
                                     />
                                 </svg>
-                            </a>
+                            </Link>
                         </li>
 
                         <li>
-                            <a
+                            <Link
                                 href="#"
                                 rel="noreferrer"
                                 target="_blank"
@@ -214,11 +216,11 @@ function Footer() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                            </a>
+                            </Link>
                         </li>
 
                         <li>
-                            <a
+                            <Link
                                 href="#"
                                 rel="noreferrer"
                                 target="_blank"
@@ -232,7 +234,7 @@ function Footer() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                            </a>
+                            </Link>
                         </li>
                     </ul>
 
@@ -242,7 +244,7 @@ function Footer() {
                         </div>
 
                         <p className="mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-right">
-                            Copyright &copy; 2022. All rights reserved.
+                            Copyright &copy; 2024. All rights reserved.
                         </p>
                     </div>
                 </div>
