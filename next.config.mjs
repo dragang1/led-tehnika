@@ -2,7 +2,9 @@
 const nextConfig = {
     reactStrictMode: true, // Helps catch potential issues in development
     images: {
-        domains: ['led-backend-62tj.onrender.com'], // Allow images from your backend
+        domains: ['led-backend-62tj.onrender.com',
+            'res.cloudinary.com'
+        ], // Allow images from your backend
         remotePatterns: [
             {
                 protocol: 'https', // Make sure to use https for Render
