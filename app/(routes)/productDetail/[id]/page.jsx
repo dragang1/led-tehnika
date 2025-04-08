@@ -157,24 +157,30 @@ const ProductDetailPage = () => {
 
             {/* Related Products */}
             {relatedProducts.length > 0 && (
-                <div className='mt-12 '>
-                    <h3 className='text-2xl font-semibold text-gray-800 mb-6'>Slični proizvodi</h3>
-                    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6'>
+                <div className="mt-12 px-4 sm:px-6 lg:px-0">
+                    <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
+                        Slični proizvodi
+                    </h3>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {relatedProducts.map((item) => (
                             <Link key={item.documentId} href={`/productDetail/${item.documentId}`}>
-                                <div className='block overflow-hidden rounded-lg bg-white border border-gray-200 hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105'>
-                                    <div className='relative w-full h-[250px]'>
+                                <div className="flex flex-col h-full rounded-lg border border-gray-200 bg-white hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 overflow-hidden">
+                                    <div className="relative w-full aspect-[4/3]">
                                         <Image
                                             src={item.image?.[0]?.url}
                                             alt={item.image?.[0]?.alternativeText || 'related product image'}
-                                            width={250}
-                                            height={250}
-                                            className='w-full h-full object-cover rounded-lg'
+                                            fill
+                                            className="object-cover"
                                         />
                                     </div>
-                                    <div className='flex flex-col justify-between p-4 h-full'>
-                                        <h4 className='text-center font-semibold text-lg text-gray-900'>{item.name}</h4>
-                                        <p className='font-bold text-xl text-center text-primary'>{item.price.toFixed(2)} KM</p>
+                                    <div className="flex flex-col justify-between p-4 flex-grow">
+                                        <h4 className="text-center font-semibold text-base sm:text-lg text-gray-900">
+                                            {item.name}
+                                        </h4>
+                                        <p className="font-bold text-center text-primary text-lg sm:text-xl mt-2">
+                                            {item.price.toFixed(2)} KM
+                                        </p>
                                     </div>
                                 </div>
                             </Link>
@@ -182,6 +188,7 @@ const ProductDetailPage = () => {
                     </div>
                 </div>
             )}
+
         </div>
     );
 };
