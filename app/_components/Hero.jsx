@@ -21,11 +21,10 @@ function Hero() {
                 const sliders = response[0]?.sliders || [];
                 console.log('Sliders:', sliders);
 
-                // Ensure there's only one `/` between parts
-                const backendUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL.replace(/\/$/, ''); // Remove trailing slash
+                // Map slider URLs to Cloudinary URLs (no need to hardcode Cloudinary base URL)
                 const imageUrls = sliders.map(slider => {
                     const imageUrl = slider?.url?.replace(/^\//, ''); // Remove leading slash
-                    return imageUrl ? `${backendUrl}/${imageUrl}` : null;
+                    return imageUrl ? imageUrl : null;
                 }).filter(Boolean);
 
                 console.log('Extracted Images:', imageUrls);
@@ -41,9 +40,6 @@ function Hero() {
 
         fetchImages();
     }, []);
-
-
-
 
     // Auto-slide effect
     useEffect(() => {
@@ -100,9 +96,6 @@ function Hero() {
             </div>
         </section>
     );
-
-
-
 }
 
 export default Hero;

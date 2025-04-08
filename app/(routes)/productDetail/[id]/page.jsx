@@ -27,10 +27,9 @@ const ProductDetailPage = () => {
             console.log("Current product ID:", id);
 
             try {
-                // Make sure to use documentId instead of id
                 const productData = await GlobalApi.getProductById(id);
                 setProduct(productData);
-                setSelectedImage(productData.image[0]?.url);
+                setSelectedImage(productData.image?.[0]?.url || '');  // Handling case when image array is empty
 
                 if (productData?.kategorije?.name) {
                     fetchRelatedProducts(productData.kategorije.name, productData.documentId);
@@ -48,11 +47,9 @@ const ProductDetailPage = () => {
             return () => { document.title = 'Led Tehnika'; };
         };
 
-        console.log("Fetching product with documentId:", id); // Log the id to check it's the correct documentId
+        console.log("Fetching product with documentId:", id);
         fetchProduct();
     }, [id]);
-
-
 
     const fetchRelatedProducts = async (categoryName, productDocumentId) => {
         try {
@@ -61,7 +58,6 @@ const ProductDetailPage = () => {
             const relatedProductsData = await GlobalApi.getProductsByCategory(categoryName);
             console.log("Fetched related products:", relatedProductsData);
 
-            // Filter out the current product by documentId
             const filteredRelatedProducts = relatedProductsData.filter(product => product.documentId !== productDocumentId);
             console.log("Filtered Related Products:", filteredRelatedProducts);
 
@@ -70,9 +66,6 @@ const ProductDetailPage = () => {
             console.error("Error fetching related products:", error);
         }
     };
-
-
-
 
     const productTotalPrice = product ? product.price * quantity : 0;
 
@@ -106,14 +99,15 @@ const ProductDetailPage = () => {
             <div className='flex flex-col md:flex-row items-center justify-between'>
                 {/* Product Image */}
                 <div className='w-full md:w-1/2 flex justify-center mb-5 md:mb-0'>
-                    <Image
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${selectedImage || product?.image?.[0]?.url || "/placeholder.jpg"}`.replace(/([^:]\/)\/+/g, "$1")}
-                        width={500}  // Adjust width for better fit
-                        height={400} // Adjust height to fit the image appropriately
-                        alt='Product Image'
-
-                        className='object-contain w-full h-full rounded-md hover:scale-105 transition-all ease-in-out'
-                    />
+                    {selectedImage && (
+                        <Image
+                            src={selectedImage}
+                            alt={product?.image?.[0]?.alternativeText || 'product image'}
+                            width={500}
+                            height={400}
+                            className='object-contain w-full h-full rounded-md hover:scale-105 transition-all ease-in-out'
+                        />
+                    )}
                 </div>
 
                 {/* Product Details */}
@@ -128,13 +122,13 @@ const ProductDetailPage = () => {
                         {product?.image?.map((image, index) => (
                             <Image
                                 key={index}
-                                src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${image?.formats?.thumbnail?.url || image?.url}`.replace(/([^:]\/)\/+/g, "$1")}
+                                src={image.url}
+                                alt={image.alternativeText || 'image'}
                                 width={70}
                                 height={70}
-                                alt="Thumbnail"
                                 className={`h-[70px] w-[70px] object-cover cursor-pointer rounded-md transition-all 
-                        ${selectedImage === image?.url ? 'border-2 border-blue-500' : 'border-2 border-transparent'}
-                        hover:border-blue-300`}
+                                    ${selectedImage === image?.url ? 'border-2 border-blue-500' : 'border-2 border-transparent'}
+                                    hover:border-blue-300`}
                                 onClick={() => setSelectedImage(image?.url)}
                             />
                         ))}
@@ -171,13 +165,11 @@ const ProductDetailPage = () => {
                                 <div className='block overflow-hidden rounded-lg bg-white border border-gray-200 hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105'>
                                     <div className='relative w-full h-[250px]'>
                                         <Image
-                                            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${item?.image?.[0]?.url || "/placeholder.jpg"}`.replace(/([^:]\/)\/+/g, "$1")}
+                                            src={item.image?.[0]?.url}
+                                            alt={item.image?.[0]?.alternativeText || 'related product image'}
                                             width={250}
                                             height={250}
-                                            alt={item.name}
-
-                                            objectFit='cover'
-                                            className='rounded-lg'
+                                            className='w-full h-full object-cover rounded-lg'
                                         />
                                     </div>
                                     <div className='flex flex-col justify-between p-4 h-full'>
@@ -191,9 +183,6 @@ const ProductDetailPage = () => {
                 </div>
             )}
         </div>
-
-
-
     );
 };
 

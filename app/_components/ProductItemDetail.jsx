@@ -67,10 +67,11 @@ function ProductItemDetail({ product }) {
         <div className='grid grid-cols-1 md:grid-cols-2 p-7 bg-white text-black mx-5'>
             {/* Display the selected image */}
             <Image
-                src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + selectedImage}
+                src={image.url}
+                alt={image.alternativeText || 'image'}
                 width={300}
                 height={300}
-                alt={product?.name}
+
                 className='h-[200px] w-[300px] object-contain md:h-[320px] md:w-[300px]' // Smaller height on mobile
             />
 
@@ -84,10 +85,11 @@ function ProductItemDetail({ product }) {
                     {product?.im?.map((image, index) => (
                         <Image
                             key={index}
-                            src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + image.url}
+                            src={image.url}
+                            alt={image.alternativeText || 'image'}
                             width={80}
                             height={80}
-                            alt={`${product?.name} image ${index + 1}`}
+
                             className={`h-[60px] w-[60px] object-cover cursor-pointer ${selectedImage === image.url ? 'border-2 border-blue-500' : ''}`} // Smaller thumbnail size on mobile
                             onClick={() => setSelectedImage(image.url)} // Update selected image on click
                         />

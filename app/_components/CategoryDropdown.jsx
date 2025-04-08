@@ -21,35 +21,33 @@ function CategoryDropdown({ categoryList }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuSeparator />
-                    {categoryList?.map((cat, index) => {
-                        console.log('Category:', cat); // To inspect the category data
-                        const iconUrl = cat?.icon?.url;
-                        const fullImageUrl = iconUrl
-                            ? `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL.replace(/\/$/, '')}${iconUrl}`
-                            : '/path/to/placeholder-image.png'; // Fallback image
-
-                        console.log("Generated Image URL:", fullImageUrl);  // Log the full image URL for debugging
+                    {categoryList?.map((cat) => {
+                        // Directly use the icon URL from Strapi (Cloudinary URL is already provided)
+                        const iconUrl = cat?.icon?.url || null; // If iconUrl is falsy, use null
 
                         return (
-                            <Link href={'/kategorije/' + cat.name} key={index}>
+                            <Link href={'/kategorije/' + cat.name} key={cat.id || cat.name}>
                                 <DropdownMenuItem className='flex gap-2 items-center cursor-pointer'>
-                                    <Image
-                                        src={fullImageUrl}
-                                        width={25}
-                                        height={25}
-                                        alt={cat?.name || 'icon'} // Fallback alt text
-                                    />
+                                    {iconUrl ? (
+                                        <Image
+                                            src={iconUrl} // Cloudinary URL or any other valid URL
+                                            width={25}
+                                            height={25}
+                                            alt={`${cat?.name || 'category'} icon`} // More descriptive alt text
+                                        />
+                                    ) : (
+                                        // Placeholder if iconUrl is not available
+                                        <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                                    )}
                                     <h2>{cat?.name}</h2>
                                 </DropdownMenuItem>
                             </Link>
                         );
                     })}
-
-
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-    )
+    );
 }
 
 export default CategoryDropdown;
