@@ -98,17 +98,20 @@ const ProductDetailPage = () => {
         <div className='p-9 bg-white text-black mx-5 mt-5 border'>
             <div className='flex flex-col md:flex-row items-center justify-between'>
                 {/* Product Image */}
-                <div className='w-full md:w-1/2 flex justify-center mb-5 md:mb-0'>
+                {/* Product Image */}
+                <div className='w-full md:w-1/2 flex justify-center items-center mb-5 md:mb-0'>
                     {selectedImage && (
-                        <Image
-                            src={selectedImage}
-                            alt={product?.image?.[0]?.alternativeText || 'product image'}
-                            width={500}
-                            height={400}
-                            className='object-contain w-full h-full rounded-md hover:scale-105 transition-all ease-in-out'
-                        />
+                        <div className="relative w-[400px] h-[400px] max-w-full">
+                            <Image
+                                src={selectedImage}
+                                alt={product?.image?.[0]?.alternativeText || 'product image'}
+                                fill
+                                className='object-contain rounded-md hover:scale-105 transition-all ease-in-out'
+                            />
+                        </div>
                     )}
                 </div>
+
 
                 {/* Product Details */}
                 <div className='w-full md:w-1/2 flex flex-col items-center md:items-start gap-4'>
@@ -157,7 +160,7 @@ const ProductDetailPage = () => {
 
             {/* Related Products */}
             {relatedProducts.length > 0 && (
-                <div className="mt-12 px-4 sm:px-6 lg:px-0">
+                <div className="mt-12 px-4 sm:px-6 lg:px-0 max-w-screen-xl mx-auto">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
                         Slični proizvodi
                     </h3>
@@ -171,7 +174,7 @@ const ProductDetailPage = () => {
                                             src={item.image?.[0]?.url}
                                             alt={item.image?.[0]?.alternativeText || 'related product image'}
                                             fill
-                                            className="object-cover"
+                                            className="object-contain"
                                         />
                                     </div>
                                     <div className="flex flex-col justify-between p-4 flex-grow">

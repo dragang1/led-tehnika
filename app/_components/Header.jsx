@@ -47,7 +47,7 @@ function Header() {
     const toggleMenu = () => setMenuOpen(prev => !prev);
 
     return (
-        <header className="bg-white py-4 shadow-md fixed top-0 left-0 right-0 z-50">
+        <header className="bg-white py-4 shadow-md fixed top-0 left-0 right-0 z-50 ">
             <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
                 {/* Logo */}
                 <Link href="/">

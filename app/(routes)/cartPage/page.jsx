@@ -1,8 +1,7 @@
-'use client'; // Ensure this is a client component
+'use client';
 
 import React from 'react';
 import { useCart } from '../../_components/CartContext'; // Adjust this path based on your folder structure
-
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -19,8 +18,25 @@ function CartPage() {
         return cart.reduce((total, item) => total + parseFloat(item.amount), 0).toFixed(2);
     };
 
+    const getImageUrl = (imagePath) => {
+        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
+        // If the imagePath is a full URL (Cloudinary), return it as is
+        if (imagePath && imagePath.startsWith('https://res.cloudinary.com')) {
+            return imagePath; // Cloudinary URL
+        }
+
+        // If the imagePath is relative (starts with /), prepend base URL
+        if (imagePath && imagePath.startsWith('/')) {
+            return `${baseUrl}${imagePath}`;
+        }
+
+        // Return the image path itself if it's valid and from backend
+        return `${baseUrl}${imagePath}`;
+    };
+
     if (cart.length === 0) {
-        return <div>Tvoja korpa je prazna.</div>;
+        return <div>Your cart is empty.</div>;
     }
 
     return (
@@ -30,7 +46,7 @@ function CartPage() {
                 {cart.map((item) => (
                     <div key={item.product.id} className='flex items-center gap-5 border p-5'>
                         <Image
-                            src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + item.product.images[0]?.url}
+                            src={getImageUrl(item.product.images[0]?.url)} // Dynamically construct the image URL
                             width={100}
                             height={100}
                             alt={item.product.name}

@@ -53,7 +53,7 @@ function Hero() {
     }, [images]);
 
     return (
-        <section className="relative w-full h-screen overflow-hidden">
+        <section className="relative w-full h-[80vh] overflow-hidden">
             {images.map((image, index) => (
                 <div
                     key={index}

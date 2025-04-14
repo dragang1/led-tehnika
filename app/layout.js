@@ -19,7 +19,10 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <CartProvider>
           <Header />
-          {children}
+          <div className="pt-24">
+
+            {children}
+          </div>
           <Toaster />
           <MenuItems />
           <Footer />
