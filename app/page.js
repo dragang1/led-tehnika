@@ -14,8 +14,8 @@ export default async function Home() {
   const productList = await GlobalApi.getAllProducts();
   return (
     <div className='px-4 md:px-10 lg:px-16 py-5 max-w-screen-xl mx-auto'>
-      {/* <Hero categoryList={categoryList} /> */}
-      <ProductShowcase productList={productList} />
+      <Hero categoryList={categoryList} />
+      {/* <ProductShowcase productList={productList} /> */}
 
       <CategoryList categoryList={categoryList} />
       <div>
