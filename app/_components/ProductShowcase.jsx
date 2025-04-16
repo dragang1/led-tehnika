@@ -1,61 +1,78 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+'use client'
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import GlobalApi from '@/app/_utils/GlobalApi';
 
-const ProductShowcase = ({ productList }) => {
-  const [current, setCurrent] = useState(0);
+const ProductShowcase = () => {
+  const [productList, setProductList] = useState([]);
 
+  // Fetching products data on component mount
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % productList.length);
-    }, 5000); // change slide every 5 seconds
+    const fetchProducts = async () => {
+      try {
+        const productData = await GlobalApi.getAllProducts();  // This is your function
+        setProductList(productData);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+      }
+    };
 
-    return () => clearInterval(timer);
-  }, [productList.length]);
+    fetchProducts();
+  }, []); // Runs once when the component mounts
 
-  const currentProduct = productList[current];
-
-  const rawUrl = currentProduct?.images?.[0]?.url;
-
-  const imageUrl = rawUrl
-    ? rawUrl.startsWith('http')
-      ? rawUrl
-      : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL.replace(/\/$/, '')}${rawUrl}`
-    : '/default-image.jpg';
-
+  // Get the image URL dynamically using useMemo for performance optimization
+  const currentProduct = productList[0]; // Just display the first product for now
+  const imageUrl = useMemo(() => {
+    if (currentProduct?.images?.[0]) {
+      const imgUrl = currentProduct.images[0].url;
+      console.log("Image URL:", imgUrl); // Debugging: Check the image URL
+      if (process.env.NODE_ENV === 'production') {
+        const cloudinaryBaseUrl = process.env.NEXT_PUBLIC_CLOUDINARY_BASE_URL;
+        return cloudinaryBaseUrl ? `${cloudinaryBaseUrl}${imgUrl}` : imgUrl;
+      }
+      return imgUrl;
+    }
+    return '/default-image.jpg';  // Fallback image
+  }, [currentProduct]);  // Re-run if currentProduct changes
 
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center p-6">
-      <div className="relative w-full h-[300px] overflow-hidden rounded-lg">
-        <AnimatePresence mode="wait">
+    <div>
+      {currentProduct ? (
+        <motion.div
+          initial={{ opacity: 0 }} // Initial state (transparent)
+          animate={{ opacity: 1 }} // Target state (fully visible)
+          transition={{ duration: 1 }} // Transition duration
+          className="flex flex-col items-center justify-center space-y-4"
+        >
+          {/* Product Image with Framer Motion animation */}
           <motion.div
-            key={current}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.6 }}
-            className="absolute top-0 left-0 w-full h-full"
+            initial={{ scale: 0.8 }} // Start smaller
+            animate={{ scale: 1 }}   // Scale to normal size
+            transition={{ duration: 0.5 }}
           >
             <Image
               src={imageUrl}
-              alt={currentProduct.name}
-              fill
-              className="object-cover rounded-lg"
+              alt={currentProduct?.name || 'Product Image'}
+              width={300}
+              height={300}
+              className="object-cover rounded"
             />
           </motion.div>
-        </AnimatePresence>
-      </div>
-      <motion.h2
-        key={`title-${current}`}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4 }}
-        className="mt-4 text-xl font-bold text-center"
-      >
-        {currentProduct.name}
-      </motion.h2>
+
+          {/* Product Name with Fade In */}
+          <motion.p
+            initial={{ opacity: 0 }} // Initial opacity (invisible)
+            animate={{ opacity: 1 }}  // Fade to visible
+            transition={{ duration: 1 }}
+            className="font-semibold text-xl"
+          >
+            {currentProduct?.name}
+          </motion.p>
+        </motion.div>
+      ) : (
+        <p>Loading product...</p> // Loading text when product is not available
+      )}
     </div>
   );
 };
