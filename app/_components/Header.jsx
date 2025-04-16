@@ -48,7 +48,7 @@ function Header() {
 
     return (
         <header className="bg-white py-4 shadow-md fixed top-0 left-0 right-0 z-50 ">
-            <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8 ">
                 {/* Logo */}
                 <Link href="/">
                     <Image src="/logo-black.png" width={250} height={120} alt="Logo" className='object-contain' />

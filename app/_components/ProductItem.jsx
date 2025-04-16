@@ -35,7 +35,7 @@ function ProductItem({ product }) {
                         {product.price}.00 KM
                     </h2>
 
-                    <Button className="mt-2">Pogledaj</Button>
+                    <Button className="mt-2">Dodaj u korpu</Button>
                 </div>
             </div>
         </Link>
