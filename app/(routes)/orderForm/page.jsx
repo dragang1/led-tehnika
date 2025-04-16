@@ -250,25 +250,28 @@ const OrderForm = () => {
             {/* Simple Cart Item Card Section */}
             <div className="p-4 bg-white rounded-lg shadow-sm border">
                 <Image src='/logo-black.png' width={200} height={100} alt='logo' />
-                {cart.length && (
+
+                {cart.length > 0 && (
                     <ul>
                         {cart.map((item, index) => {
+                            // Constructing the image URL, following the logic from your previous example
                             const imageUrl = item.product.image?.[0]?.url
-                                ? `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL.replace(/\/$/, '')}${item.product.image[0].url}`
-                                : '/path/to/placeholder-image.png';
+                                ? `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '')}${item.product.image[0].url}`
+                                : '/path/to/placeholder-image.png';  // Fallback to placeholder image if the URL is missing
 
                             console.log("Image URL: ", imageUrl);  // Log the image URL for debugging
+
                             return (
                                 <li key={index} className="flex justify-between mb-2 gap-2">
                                     <Image
                                         src={imageUrl}
-                                        alt={item.product.name}
+                                        alt={item.product.name || 'Nepoznat proizvod'}
                                         width={50}
                                         height={50}
                                         className="object-cover rounded-md"
                                     />
                                     <div className="flex-1 text-sm">
-                                        <p className="font-semibold">{item.product.name}</p>
+                                        <p className="font-semibold">{item.product.name || 'Nepoznat proizvod'}</p>
                                         <p className="text-gray-600">x{item.quantity}</p>
                                     </div>
                                     <p className="text-gray-900">{(item.quantity * item.product.price).toFixed(2)} KM</p>
@@ -277,10 +280,13 @@ const OrderForm = () => {
                         })}
                     </ul>
                 )}
+
                 <div className="mt-4 font-semibold text-lg text-right">
                     <p>Ukupno ({totalCartItems} artikala): <span className="text-gray-900">{totalPrice.toFixed(2)} KM</span></p>
                 </div>
             </div>
+
+
         </div>
     );
 };

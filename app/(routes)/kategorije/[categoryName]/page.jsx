@@ -10,10 +10,11 @@ async function ProductCategory({ params }) {
     const categoryList = await GlobalApi.getCategoryList();
     return (
         <div className="px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto">
-            <h2 className="w-full text-center text-white font-bold text-xl md:text-3xl p-4 md:p-6 
-          bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg">
+            <h2 className="w-full text-center text-white font-semibold text-lg md:text-2xl py-3 md:py-4 px-4 
+    bg-gradient-to-r from-blue-600 to-indigo-500 rounded-md shadow-md tracking-wide">
                 {categoryName}
             </h2>
+
 
             <TopCategoryList categoryList={categoryList} selectedCategory={params.categoryName} />
 
