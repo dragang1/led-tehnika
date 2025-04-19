@@ -132,7 +132,7 @@ const OrderForm = () => {
     };
 
     return (
-        <div className="flex flex-col md:flex-row gap-4 p-4 max-w-4xl mx-auto bg-white rounded-lg mt-5 ">
+        <div className="flex flex-col md:flex-row gap-4 p-6 max-w-6xl mx-auto bg-white rounded-lg mt-5"> {/* Increased max-width */}
             {/* Form Section with larger width */}
             <div className="flex-1 p-6 bg-gray-50 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold mb-4">Završite Vašu narudžbu</h2>
@@ -247,27 +247,26 @@ const OrderForm = () => {
                 </form>
             </div>
 
-            {/* Simple Cart Item Card Section */}
-            <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200">
+            {/* Larger Simple Cart Item Card Section */}
+            <div className="p-8 bg-white rounded-lg shadow-md border border-gray-200 flex-1"> {/* Increased padding and flex-1 */}
                 <Image src='/logo-black.png' width={200} height={100} alt='logo' className="mx-auto mb-6" />
 
                 {cart.length > 0 ? (
                     <ul className="space-y-4">
                         {cart.map((item, index) => {
-                            // Constructing the image URL
                             const imageUrl = item.product.image?.[0]?.url
                                 ? item.product.image[0].url.startsWith('http')
-                                    ? item.product.image[0].url  // If it's already an absolute URL (e.g., Cloudinary)
+                                    ? item.product.image[0].url
                                     : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '')}${item.product.image[0].url}`
-                                : '/path/to/placeholder-image.png'; // Fallback to placeholder image if the URL is missing
+                                : '/path/to/placeholder-image.png';
 
                             return (
                                 <li key={index} className="flex items-center gap-4 border-b pb-4">
                                     <Image
-                                        src={imageUrl} // Full URL
+                                        src={imageUrl}
                                         alt={item.product.name}
-                                        width={80}
-                                        height={80}
+                                        width={100}
+                                        height={100}
                                         className="object-cover rounded-md"
                                     />
 
@@ -294,10 +293,10 @@ const OrderForm = () => {
                     <p>{totalPrice.toFixed(2)} KM</p>
                 </div>
             </div>
-
-
-
         </div>
+
+
+
     );
 };
 
