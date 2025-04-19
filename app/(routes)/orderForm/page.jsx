@@ -248,43 +248,53 @@ const OrderForm = () => {
             </div>
 
             {/* Simple Cart Item Card Section */}
-            <div className="p-4 bg-white rounded-lg shadow-sm border">
-                <Image src='/logo-black.png' width={200} height={100} alt='logo' />
+            <div className="p-6 bg-white rounded-lg shadow-md border border-gray-200">
+                <Image src='/logo-black.png' width={200} height={100} alt='logo' className="mx-auto mb-6" />
 
-                {cart.length > 0 && (
-                    <ul>
+                {cart.length > 0 ? (
+                    <ul className="space-y-4">
                         {cart.map((item, index) => {
-                            // Constructing the image URL, following the logic from your previous example
+                            // Constructing the image URL
                             const imageUrl = item.product.image?.[0]?.url
-                                ? `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '')}${item.product.image[0].url}`
-                                : '/path/to/placeholder-image.png';  // Fallback to placeholder image if the URL is missing
-
-                            console.log("Image URL: ", imageUrl);  // Log the image URL for debugging
+                                ? item.product.image[0].url.startsWith('http')
+                                    ? item.product.image[0].url  // If it's already an absolute URL (e.g., Cloudinary)
+                                    : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '')}${item.product.image[0].url}`
+                                : '/path/to/placeholder-image.png'; // Fallback to placeholder image if the URL is missing
 
                             return (
-                                <li key={index} className="flex justify-between mb-2 gap-2">
+                                <li key={index} className="flex items-center gap-4 border-b pb-4">
                                     <Image
-                                        src={imageUrl}
-                                        alt={item.product.name || 'Nepoznat proizvod'}
-                                        width={50}
-                                        height={50}
+                                        src={imageUrl} // Full URL
+                                        alt={item.product.name}
+                                        width={80}
+                                        height={80}
                                         className="object-cover rounded-md"
                                     />
-                                    <div className="flex-1 text-sm">
-                                        <p className="font-semibold">{item.product.name || 'Nepoznat proizvod'}</p>
-                                        <p className="text-gray-600">x{item.quantity}</p>
+
+                                    <div className="flex-1">
+                                        <p className="text-lg font-semibold">{item.product.name || 'Nepoznat proizvod'}</p>
+                                        <p className="text-sm text-gray-600">Cijena po komadu: <span className="font-medium">{item.product.price.toFixed(2)} KM</span></p>
+                                        <p className="text-sm text-gray-600">Količina: <span className="font-medium">{item.quantity}</span></p>
                                     </div>
-                                    <p className="text-gray-900">{(item.quantity * item.product.price).toFixed(2)} KM</p>
+
+                                    <p className="text-lg font-semibold text-gray-900">
+                                        {(item.quantity * item.product.price).toFixed(2)} KM
+                                    </p>
                                 </li>
                             );
                         })}
                     </ul>
+                ) : (
+                    <p className="text-center text-gray-500">Vaša korpa je prazna.</p>
                 )}
 
-                <div className="mt-4 font-semibold text-lg text-right">
-                    <p>Ukupno ({totalCartItems} artikala): <span className="text-gray-900">{totalPrice.toFixed(2)} KM</span></p>
+                {/* Total Section */}
+                <div className="mt-6 flex justify-between font-semibold text-lg text-gray-900">
+                    <p>Ukupno :</p>
+                    <p>{totalPrice.toFixed(2)} KM</p>
                 </div>
             </div>
+
 
 
         </div>

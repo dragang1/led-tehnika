@@ -1,78 +1,75 @@
-'use client'
-import { useState, useEffect, useMemo } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import GlobalApi from '@/app/_utils/GlobalApi';
 
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetching products data on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const productData = await GlobalApi.getAllProducts();  // This is your function
-        setProductList(productData);
-      } catch (err) {
-        console.error('Error fetching products:', err);
+        const res = await GlobalApi.getAllProducts();
+        console.log('Fetched products:', res); // 🔍 Provjera podataka
+        setProductList(res || []);
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
       }
     };
 
     fetchProducts();
-  }, []); // Runs once when the component mounts
+  }, []);
 
-  // Get the image URL dynamically using useMemo for performance optimization
-  const currentProduct = productList[0]; // Just display the first product for now
-  const imageUrl = useMemo(() => {
-    if (currentProduct?.images?.[0]) {
-      const imgUrl = currentProduct.images[0].url;
-      console.log("Image URL:", imgUrl); // Debugging: Check the image URL
-      if (process.env.NODE_ENV === 'production') {
-        const cloudinaryBaseUrl = process.env.NEXT_PUBLIC_CLOUDINARY_BASE_URL;
-        return cloudinaryBaseUrl ? `${cloudinaryBaseUrl}${imgUrl}` : imgUrl;
-      }
-      return imgUrl;
-    }
-    return '/default-image.jpg';  // Fallback image
-  }, [currentProduct]);  // Re-run if currentProduct changes
+  useEffect(() => {
+    if (productList.length === 0) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % productList.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [productList]);
+
+  const currentProduct = productList[currentIndex];
+  const imageUrl = currentProduct?.image?.[0]?.url;
+
+  console.log('Current Product:', currentProduct); // 🔍 Provjera pojedinačnog proizvoda
+  console.log('Image URL:', imageUrl); // 🔍 Provjera slike
 
   return (
-    <div>
-      {currentProduct ? (
-        <motion.div
-          initial={{ opacity: 0 }} // Initial state (transparent)
-          animate={{ opacity: 1 }} // Target state (fully visible)
-          transition={{ duration: 1 }} // Transition duration
-          className="flex flex-col items-center justify-center space-y-4"
-        >
-          {/* Product Image with Framer Motion animation */}
+    <div className="w-full flex justify-center items-center min-h-[300px] p-4 bg-gray-50 rounded-md shadow-sm overflow-hidden">
+      <AnimatePresence mode="wait">
+        {currentProduct && (
           <motion.div
-            initial={{ scale: 0.8 }} // Start smaller
-            animate={{ scale: 1 }}   // Scale to normal size
-            transition={{ duration: 0.5 }}
+            key={currentProduct.id}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
           >
-            <Image
-              src={imageUrl}
-              alt={currentProduct?.name || 'Product Image'}
-              width={300}
-              height={300}
-              className="object-cover rounded"
-            />
-          </motion.div>
+            {/* Image */}
+            <div className="mb-4">
+              {imageUrl ? (
+                <div className="relative w-[400px] h-[300px] mx-auto">
+                  <Image
+                    src={imageUrl}
+                    alt={currentProduct.name}
+                    fill
+                    className="object-contain rounded-md"
+                  />
+                </div>
+              ) : (
+                <p className="text-red-500">Nema slike za ovaj proizvod</p>
+              )}
+            </div>
 
-          {/* Product Name with Fade In */}
-          <motion.p
-            initial={{ opacity: 0 }} // Initial opacity (invisible)
-            animate={{ opacity: 1 }}  // Fade to visible
-            transition={{ duration: 1 }}
-            className="font-semibold text-xl"
-          >
-            {currentProduct?.name}
-          </motion.p>
-        </motion.div>
-      ) : (
-        <p>Loading product...</p> // Loading text when product is not available
-      )}
+            {/* Product Name */}
+            <h2 className="text-xl font-semibold">{currentProduct.name}</h2>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

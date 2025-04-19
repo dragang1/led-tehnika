@@ -72,27 +72,44 @@ const ProductDetailPage = () => {
     const handleAddToCart = async () => {
         setLoading(true);
 
+        // Kreiraj cartItem sa documentId
         const cartItem = {
             quantity: quantity,
             amount: productTotalPrice.toFixed(2),
-            product: product
+            product: {
+                ...product,
+                documentId: product.documentId, // Dodaj documentId
+            }
         };
 
+        // Uzmi cart iz lokalne memorije
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingProductIndex = cart.findIndex(item => item.product.id === product.id);
+
+        // Pronađi proizvod u cartu koristeći documentId
+        const existingProductIndex = cart.findIndex(item => item.product.documentId === product.documentId);
 
         if (existingProductIndex > -1) {
+            // Ako proizvod već postoji u korpi, ažuriraj količinu i cenu
             cart[existingProductIndex].quantity += quantity;
             cart[existingProductIndex].amount = cart[existingProductIndex].quantity * product.price;
         } else {
+            // Ako proizvod ne postoji, dodaj ga u korpu
             cart.push(cartItem);
         }
 
+        // Spremi ažurirani cart u lokalnu memoriju
         localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Pozovi addToCart funkciju iz konteksta
         addToCart(cartItem);
+
+        // Prikazivanje poruke o uspehu
         toast.success('Dodano u korpu');
+
+        // Zatvori loading stanje nakon 500ms
         setTimeout(() => setLoading(false), 500);
     };
+
 
     return (
         <div className='p-9 bg-white text-black mx-5 mt-5 border'>

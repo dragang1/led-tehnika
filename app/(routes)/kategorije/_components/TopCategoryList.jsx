@@ -6,7 +6,7 @@ function TopCategoryList({ categoryList, selectedCategory }) {
     return (
         <div className="flex justify-center gap-5 mt-2 overflow-auto items-center mx-7 md:mx-20">
             {categoryList.map((cat, index) => {
-                
+
                 const iconUrl = cat.icon?.url || '/path/to/placeholder-image.png';
 
                 return (
@@ -24,8 +24,8 @@ function TopCategoryList({ categoryList, selectedCategory }) {
                                 layout="intrinsic"
                                 width={150}
                                 height={100}
-                                objectFit="cover"
-                                className="group-hover:scale-110 transition-transform duration-300"
+
+                                className="group-hover:scale-110 transition-transform duration-300 object-contain"
                             />
                         </div>
 

@@ -9,15 +9,8 @@ const CartItemList = () => {
 
     const getImageUrl = (url) => {
         if (!url) return '/default-image.jpg';
-
-        if (url.startsWith('http://') || url.startsWith('https://')) {
-            return url;
-        }
-
-        const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '');
-        return `${baseUrl}${url}`;
+        return url.startsWith('http') ? url : '/default-image.jpg';
     };
-
 
 
     const totalPrice = useMemo(() => {
@@ -29,7 +22,7 @@ const CartItemList = () => {
             {cart?.length > 0 ? (
                 <>
                     {cart.map((item) => {
-                        const imageUrl = getImageUrl(item?.product?.images?.[0]?.url);
+                        const imageUrl = getImageUrl(item?.product?.image?.[0]?.url); // <-- OVO PROMIJENJENO
 
                         return (
                             <div key={item.product.id} className="flex items-center justify-between p-4 border-b">
@@ -37,7 +30,7 @@ const CartItemList = () => {
                                     {/* Product Image */}
                                     <Image
                                         src={imageUrl}
-                                        alt={item?.product?.name || "Nepoznat proizvod"}
+                                        alt={item?.product?.image?.[0]?.alternativeText || item?.product?.name || "Nepoznat proizvod"}
                                         width={50}
                                         height={50}
                                         className="object-cover rounded-md"

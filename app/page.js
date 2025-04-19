@@ -15,14 +15,14 @@ export default async function Home() {
   return (
     <div className='px-4 md:px-10 lg:px-16 py-5 max-w-screen-xl mx-auto'>
       <Hero categoryList={categoryList} />
-      {/* <ProductShowcase productList={productList} /> */}
+      <ProductShowcase productList={productList} />
 
       <CategoryList categoryList={categoryList} />
       <div>
         <h2 className='text-primary font-bold text-2xl mt-5 mx-2'>Popularni Proizvodi</h2>
         <ProductList productList={productList} />
       </div>
-      {/* <Slider sliderList={sliderList} /> */}
+
     </div>
 
   );
