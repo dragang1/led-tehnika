@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import GlobalApi from '../_utils/GlobalApi';
+import ProductShowcase from './ProductShowcase';
 
 function Hero() {
     const [images, setImages] = useState([]);
@@ -53,7 +54,10 @@ function Hero() {
     }, [images]);
 
     return (
+
+
         <section className="relative w-full h-[80vh] overflow-hidden">
+            {/* Background Images Slideshow */}
             {images.map((image, index) => (
                 <div
                     key={index}
@@ -65,16 +69,17 @@ function Hero() {
                         backgroundRepeat: 'no-repeat',
                         height: '100%',
                         width: '100%',
-                        zIndex: -1
+                        zIndex: -1,
                     }}
                 ></div>
             ))}
 
-            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-10"></div>
-
-            <div className="relative mx-auto flex flex-col justify-center items-center h-full px-4 sm:px-8 lg:flex lg:flex-row lg:items-center lg:justify-between lg:px-20 z-20">
-                <div className="text-center lg:text-left lg:max-w-[70vw]">
-                    <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
+            {/* Product Showcase */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-50 z-10"></div>
+            <div className="relative z-20 w-full h-full px-6 sm:px-12 lg:px-16 flex flex-col sm:flex-row justify-center items-center">
+                {/* Left Content (Text and Button Section) */}
+                <div className="text-center sm:text-left w-full sm:w-[50%] mb-8 sm:mb-0 flex flex-col justify-center z-20">
+                    <h1 className="text-4xl font-extrabold text-white sm:text-5xl leading-tight">
                         Potrebna ti je
                         <strong className="block font-extrabold text-primary"> Led Rasvjeta? </strong>
                     </h1>
@@ -83,18 +88,28 @@ function Hero() {
                         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
                     </p>
 
-                    <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
-                        <Link href={'/products'} className="block w-full rounded bg-rose-600 px-8 py-3 text-sm font-medium text-white shadow hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
+                    <div className="mt-8 flex flex-wrap gap-4 justify-center sm:justify-start">
+                        <Link href={'/products'} className="block w-full rounded-full bg-rose-600 px-8 py-3 text-sm font-medium text-white shadow-xl hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
                             Shop
                         </Link>
 
-                        <Link href="#" className="block w-full rounded bg-white px-8 py-3 text-sm font-medium text-rose-600 shadow hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
+                        <Link href="#" className="block w-full rounded-full bg-white px-8 py-3 text-sm font-medium text-rose-600 shadow-xl hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
                             O nama
                         </Link>
                     </div>
                 </div>
+
+                {/* Right Content (Product Showcase Component) */}
+                <div className="relative z-20 w-full sm:w-[50%]">
+                    <ProductShowcase />
+                </div>
             </div>
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent opacity-50 z-10"></div>
         </section>
+
+
     );
 }
 

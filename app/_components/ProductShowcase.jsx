@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import GlobalApi from '@/app/_utils/GlobalApi';
+import Link from 'next/link';
 
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
@@ -38,39 +39,87 @@ const ProductShowcase = () => {
   console.log('Image URL:', imageUrl); // 🔍 Provjera slike
 
   return (
-    <div className="w-full flex justify-center items-center min-h-[300px] p-4 bg-gray-50 rounded-md shadow-sm overflow-hidden">
-      <AnimatePresence mode="wait">
-        {currentProduct && (
-          <motion.div
-            key={currentProduct.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            {/* Image */}
-            <div className="mb-4">
-              {imageUrl ? (
-                <div className="relative w-[400px] h-[300px] mx-auto">
+    <div className="w-full flex justify-center items-center p-8 bg-gray-100 rounded-xl shadow-2xl overflow-hidden relative max-w-[1200px] mx-auto">
+      <div className="relative w-full h-[500px] flex flex-col sm:flex-row justify-between items-center sm:px-16 lg:px-24 z-20">
+
+        {/* Product Image and Name Section */}
+        <AnimatePresence mode="wait">
+          {currentProduct && (
+            <motion.div
+              key={currentProduct.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.8 }}
+              className="text-center relative z-20 w-full sm:w-[50%] mb-6 sm:mb-0 flex-shrink-0"
+            >
+              {/* Image */}
+              <div className="mb-6 mx-auto w-[250px] sm:w-[300px] h-[200px] sm:h-[250px] rounded-lg overflow-hidden shadow-2xl">
+                {imageUrl ? (
                   <Image
                     src={imageUrl}
                     alt={currentProduct.name}
-                    fill
-                    className="object-contain rounded-md"
+                    width={300} // Fixed width
+                    height={250} // Fixed height
+                    className="object-cover rounded-lg shadow-xl transition-transform duration-300 ease-in-out transform hover:scale-105"
                   />
-                </div>
-              ) : (
-                <p className="text-red-500">Nema slike za ovaj proizvod</p>
-              )}
-            </div>
+                ) : (
+                  <p className="text-red-500">Nema slike za ovaj proizvod</p>
+                )}
+              </div>
 
-            {/* Product Name */}
-            <h2 className="text-xl font-semibold">{currentProduct.name}</h2>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {/* Product Name */}
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 tracking-wide mt-4">{currentProduct.name}</h2>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Description Section */}
+        <div className="w-full sm:w-[50%] text-center sm:text-left px-6 sm:px-12 mt-6 sm:mt-0 flex-shrink-0">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 sm:text-5xl leading-tight">
+            Potrebna ti je
+            <strong className="block font-extrabold text-primary"> Led Rasvjeta? </strong>
+          </h1>
+
+          <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-lg mx-auto sm:mx-0">
+            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
+          </p>
+
+          <div className="mt-8 flex flex-wrap gap-6 justify-center sm:justify-start">
+            <Link href={'/products'} className="block w-full rounded-full bg-rose-600 px-8 py-3 text-sm font-medium text-white shadow-xl hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
+              Shop Now
+            </Link>
+
+            <Link href="#" className="block w-full rounded-full bg-white px-8 py-3 text-sm font-medium text-rose-600 shadow-xl hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
+              About Us
+            </Link>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   );
 };
 
