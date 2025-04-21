@@ -81,9 +81,9 @@ const ProductShowcase = () => {
             Sve na jednom mjestu.
           </h1>
 
-          <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-600">
+          {/* <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-600">
             <RotatingText />
-          </div>
+          </div> */}
 
           <p className="mt-4 text-lg sm:text-xl lg:text-2xl text-gray-600 max-w-lg mx-auto sm:mx-0">
             Širok spektar kvalitetnog asortimana različitih kategorija.
