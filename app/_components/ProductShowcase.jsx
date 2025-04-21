@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import Link from 'next/link';
+import RotatingText from './RotatingText';
 
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
@@ -51,7 +52,7 @@ const ProductShowcase = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.8 }}
-              className="text-center relative z-20 w-full sm:w-[45%] mb-6 sm:mb-0 flex-shrink-0 min-h-[400px] flex flex-col justify-center items-center"
+              className="text-center relative z-20 w-full sm:w-[45%] mb-6 sm:mb-0 flex-shrink-0 min-h-[200px] flex flex-col justify-center items-center"
             >
               {/* Image */}
               <div className="mb-6 mx-auto w-[200px] sm:w-[300px] h-[180px] sm:h-[250px] rounded-lg overflow-hidden shadow-2xl">
@@ -76,25 +77,29 @@ const ProductShowcase = () => {
 
         {/* Description Section */}
         <div className="w-full sm:w-[50%] text-center sm:text-left px-6 sm:px-12 mt-6 sm:mt-0 flex-shrink-0 min-h-[400px] flex flex-col justify-center items-center sm:items-start">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 sm:text-5xl leading-tight">
-            Potrebna ti je
-            <strong className="block font-extrabold text-primary"> Led Rasvjeta? </strong>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 sm:text-5xl leading-tight mb-4">
+            Sve na jednom mjestu.
           </h1>
 
-          <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-lg mx-auto sm:mx-0">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
+          <div className="text-2xl sm:text-3xl md:text-4xl font-semibold text-blue-600">
+            <RotatingText />
+          </div>
+
+          <p className="mt-4 text-lg sm:text-xl lg:text-2xl text-gray-600 max-w-lg mx-auto sm:mx-0">
+            Širok spektar kvalitetnog asortimana različitih kategorija.
           </p>
+
 
           {/* Button Container */}
           <div className="mt-8 flex flex-wrap gap-6 justify-center sm:justify-start">
             {/* Shop Button */}
             <Link href={'/products'} className="block w-full rounded-full bg-rose-600 px-8 py-3 text-sm font-medium text-white shadow-xl hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
-              Shop Now
+              Kupi
             </Link>
 
             {/* About Us Button */}
             <Link href="#" className="block w-full rounded-full bg-white px-8 py-3 text-sm font-medium text-rose-600 shadow-xl hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
-              About Us
+              O nama
             </Link>
           </div>
         </div>
