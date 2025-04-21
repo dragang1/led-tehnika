@@ -5,6 +5,7 @@ import Footer from "./_components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from './_components/CartContext'; // Adjust the path accordingly
 import MenuItems from "./_components/MenuItems";
+import ScrollToTop from "./_components/ScrolltoTop";
 
 const inter = Outfit({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
         <CartProvider>
           <Header />
           <div className="pt-24">
+            <ScrollToTop />
 
             {children}
           </div>

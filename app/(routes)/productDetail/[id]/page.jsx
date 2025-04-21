@@ -104,7 +104,7 @@ const ProductDetailPage = () => {
         addToCart(cartItem);
 
         // Prikazivanje poruke o uspehu
-        toast.success('Dodano u korpu');
+        toast.success(`${product.name} je dodat u korpu!`)
 
         // Zatvori loading stanje nakon 500ms
         setTimeout(() => setLoading(false), 500);

@@ -40,7 +40,7 @@ const ProductShowcase = () => {
 
   return (
     <div className="w-full flex justify-center items-center p-8 bg-gray-100 rounded-xl shadow-2xl overflow-hidden relative max-w-[1200px] mx-auto">
-      <div className="relative w-full h-[500px] flex flex-col sm:flex-row justify-between items-center sm:px-16 lg:px-24 z-20">
+      <div className="relative w-full h-auto sm:h-[500px] flex flex-col sm:flex-row justify-between items-center sm:px-16 lg:px-24 z-20">
 
         {/* Product Image and Name Section */}
         <AnimatePresence mode="wait">
@@ -51,16 +51,16 @@ const ProductShowcase = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.8 }}
-              className="text-center relative z-20 w-full sm:w-[50%] mb-6 sm:mb-0 flex-shrink-0"
+              className="text-center relative z-20 w-full sm:w-[45%] mb-6 sm:mb-0 flex-shrink-0 min-h-[400px] flex flex-col justify-center items-center"
             >
               {/* Image */}
-              <div className="mb-6 mx-auto w-[250px] sm:w-[300px] h-[200px] sm:h-[250px] rounded-lg overflow-hidden shadow-2xl">
+              <div className="mb-6 mx-auto w-[200px] sm:w-[300px] h-[180px] sm:h-[250px] rounded-lg overflow-hidden shadow-2xl">
                 {imageUrl ? (
                   <Image
                     src={imageUrl}
                     alt={currentProduct.name}
-                    width={300} // Fixed width
-                    height={250} // Fixed height
+                    width={300} // Fixed width for desktop
+                    height={250} // Fixed height for both mobile and desktop
                     className="object-cover rounded-lg shadow-xl transition-transform duration-300 ease-in-out transform hover:scale-105"
                   />
                 ) : (
@@ -75,7 +75,7 @@ const ProductShowcase = () => {
         </AnimatePresence>
 
         {/* Description Section */}
-        <div className="w-full sm:w-[50%] text-center sm:text-left px-6 sm:px-12 mt-6 sm:mt-0 flex-shrink-0">
+        <div className="w-full sm:w-[50%] text-center sm:text-left px-6 sm:px-12 mt-6 sm:mt-0 flex-shrink-0 min-h-[400px] flex flex-col justify-center items-center sm:items-start">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 sm:text-5xl leading-tight">
             Potrebna ti je
             <strong className="block font-extrabold text-primary"> Led Rasvjeta? </strong>
@@ -85,11 +85,14 @@ const ProductShowcase = () => {
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam ea!
           </p>
 
+          {/* Button Container */}
           <div className="mt-8 flex flex-wrap gap-6 justify-center sm:justify-start">
+            {/* Shop Button */}
             <Link href={'/products'} className="block w-full rounded-full bg-rose-600 px-8 py-3 text-sm font-medium text-white shadow-xl hover:bg-rose-700 focus:outline-none focus:ring active:bg-rose-500 sm:w-auto">
               Shop Now
             </Link>
 
+            {/* About Us Button */}
             <Link href="#" className="block w-full rounded-full bg-white px-8 py-3 text-sm font-medium text-rose-600 shadow-xl hover:text-rose-700 focus:outline-none focus:ring active:text-rose-500 sm:w-auto">
               About Us
             </Link>
@@ -98,6 +101,12 @@ const ProductShowcase = () => {
 
       </div>
     </div>
+
+
+
+
+
+
 
 
 
