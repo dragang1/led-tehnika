@@ -14,7 +14,7 @@ function ProductItem({ product }) {
     const imageUrl = image?.formats?.small?.url || image?.url
 
     const handleAddToCart = (e) => {
-        e.stopPropagation() // sprečava klik na kart da otvori detalje
+        e.stopPropagation() // Sprečava klik na karticu da otvori detalje
 
         const cartItem = {
             quantity: 1,
@@ -59,17 +59,17 @@ function ProductItem({ product }) {
         <div
             key={product.id}
             onClick={goToProductPage}
-            className="w-full max-w-[250px] min-h-[360px] p-4 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-lg transition-all ease-in-out cursor-pointer"
+            className="w-full max-w-[250px] min-h-[380px] p-4 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
         >
             {/* Image Section */}
-            <div className="w-full h-[180px] flex items-center justify-center">
+            <div className="w-full h-[200px] flex items-center justify-center">
                 {imageUrl ? (
                     <Image
                         src={imageUrl}
                         alt={image?.alternativeText || 'Product image'}
-                        width={180}
-                        height={180}
-                        className="object-contain max-h-full"
+                        width={200}
+                        height={200}
+                        className="object-contain max-h-full transition-transform duration-300 ease-in-out"
                     />
                 ) : (
                     <div className="text-red-500 text-sm">Nema slike</div>
@@ -78,7 +78,7 @@ function ProductItem({ product }) {
 
             {/* Text Section */}
             <div className="flex flex-col items-center justify-center w-full text-center px-2">
-                <h2 className="font-bold text-md w-full mb-1 line-clamp-2">
+                <h2 className="font-semibold text-md w-full mb-1 line-clamp-2 text-gray-800">
                     {product.name}
                 </h2>
 
@@ -86,7 +86,7 @@ function ProductItem({ product }) {
                     {product.price.toFixed(2)} KM
                 </h2>
 
-                <Button className="mt-3" onClick={handleAddToCart}>
+                <Button className="mt-4 w-full sm:w-auto" onClick={handleAddToCart}>
                     Dodaj u korpu
                 </Button>
             </div>
