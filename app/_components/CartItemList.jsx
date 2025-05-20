@@ -25,37 +25,42 @@ const CartItemList = () => {
                         const imageUrl = getImageUrl(item?.product?.image?.[0]?.url); // <-- OVO PROMIJENJENO
 
                         return (
-                            <div key={item.product.id} className="flex items-center justify-between p-4 border-b">
-                                <div className="flex items-center gap-4">
-                                    {/* Product Image */}
-                                    <Image
-                                        src={imageUrl}
-                                        alt={item?.product?.image?.[0]?.alternativeText || item?.product?.name || "Nepoznat proizvod"}
-                                        width={50}
-                                        height={50}
-                                        className="object-cover rounded-md"
-                                    />
+                              <div key={item.product.id} className="flex flex-col sm:flex-row sm:items-center justify-between border-b p-4 gap-3">
+    {/* Left: Image + Details */}
+    <div className="flex items-center gap-4">
+      <Image
+        src={imageUrl}
+        alt={
+          item?.product?.image?.[0]?.alternativeText ||
+          item?.product?.name ||
+          "Nepoznat proizvod"
+        }
+        width={50}
+        height={50}
+        className="object-cover rounded-md"
+      />
 
-                                    {/* Product Details */}
-                                    <div>
-                                        <h2 className="font-bold">{item?.product?.name || "Nepoznat proizvod"}</h2>
-                                        <p>{item?.quantity || 1} x {(item?.product?.price || 0).toFixed(2)} KM</p>
-                                    </div>
-                                </div>
+      <div>
+        <h2 className="font-bold">{item?.product?.name || "Nepoznat proizvod"}</h2>
+        <p>
+          {item?.quantity || 1} x {(item?.product?.price || 0).toFixed(2)} KM
+        </p>
+      </div>
+    </div>
 
-                                {/* Price Section */}
-                                <div className="font-bold">
-                                    {(item?.quantity * (item?.product?.price || 0)).toFixed(2)} KM
-                                </div>
-
-                                {/* Remove Button */}
-                                <button
-                                    className="ml-4 p-2 rounded-full hover:bg-red-100"
-                                    onClick={() => removeFromCart(item?.product?.id)}
-                                >
-                                    <Trash className="h-5 w-5 text-red-500" />
-                                </button>
-                            </div>
+    {/* Right: Price + Remove Button */}
+    <div className="flex justify-between sm:justify-end items-center gap-4 mt-2 sm:mt-0">
+      <div className="font-bold whitespace-nowrap min-w-[70px] text-right">
+        {(item?.quantity * (item?.product?.price || 0)).toFixed(2)} KM
+      </div>
+      <button
+        className="p-2 rounded-full hover:bg-red-100"
+        onClick={() => removeFromCart(item?.product?.id)}
+      >
+        <Trash className="h-5 w-5 text-red-500" />
+      </button>
+    </div>
+  </div>
                         );
                     })}
 

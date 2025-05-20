@@ -59,10 +59,10 @@ function ProductItem({ product }) {
         <div
             key={product.id}
             onClick={goToProductPage}
-            className="w-full max-w-[250px] min-h-[380px] p-4 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
+            className="w-full max-w-[250px] min-h-[380px] p-6 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
         >
             {/* Image Section */}
-            <div className="w-full h-[200px] flex items-center justify-center">
+            <div className="w-full h-[200px] flex items-center justify-center  ">
                 {imageUrl ? (
                     <Image
                         src={imageUrl}
@@ -86,7 +86,7 @@ function ProductItem({ product }) {
                     {product.price.toFixed(2)} KM
                 </h2>
 
-                <Button className="mt-4 w-full sm:w-auto" onClick={handleAddToCart}>
+                <Button className="mt-4  sm:w-auto  " onClick={handleAddToCart}>
                     Dodaj u korpu
                 </Button>
             </div>
