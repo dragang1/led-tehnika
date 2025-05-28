@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
 
             {children}
           </div>
-          <Toaster />
+          <Toaster duration={1000} richColors  />
           <MenuItems />
           <Footer />
         </CartProvider>

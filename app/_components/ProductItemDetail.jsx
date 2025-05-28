@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useCart } from './CartContext';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
-
+import { useRef } from 'react';
 
 
 function ProductItemDetail({ product }) {
@@ -54,12 +54,23 @@ function ProductItemDetail({ product }) {
         addToCart(cartItem);
 
         // Feedback to user
-        toast.success('Dodano u korpu');
-        // Reset loading state after successful add to cart
-        setTimeout(() => {
-            setLoading(false); // Reset loading state
-        }, 500);
+toast.success('Dodano u korpu'),
+playSound();
+
+
+setTimeout(() => {
+  setLoading(false);
+}, 500);
+
     };
+    const audioRef = useRef(null);
+
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // resetuj na početak
+      audioRef.current.play();
+    }
+  };
 
 
 
@@ -105,10 +116,11 @@ function ProductItemDetail({ product }) {
                         </div>
                         <h2 className='text-2xl font-bold'>= {quantity * productTotalPrice}KM</h2>
                     </div>
-                    <Button className='flex gap-3' onClick={handleAddToCart} disabled={loading}>
+                    <Button className='flex gap-3' onClick={handleAddToCart} disabled={loading} >
                         <ShoppingCart />
                         {loading ? <LoaderCircle className='animate-spin' /> : 'Dodaj u korpu'}
                     </Button>
+            <audio ref={audioRef} src="/sounds/success-340660.mp3" preload="auto" />
                     <Link href={`/productDetail/${product?.documentId}`}>
                         <Button>Pogledaj</Button>
                     </Link>
