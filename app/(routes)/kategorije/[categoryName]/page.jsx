@@ -15,8 +15,9 @@ async function ProductCategory({ params }) {
                 {categoryName}
             </h2>
 
-
-            <TopCategoryList categoryList={categoryList} selectedCategory={params.categoryName} />
+<div className="hidden sm:block">
+    <TopCategoryList categoryList={categoryList} selectedCategory={params.categoryName} />
+</div>
 
             <div className="py-5 md:py-10">
                 <ProductList productList={productList} />
