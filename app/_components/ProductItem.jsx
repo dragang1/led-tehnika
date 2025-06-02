@@ -56,41 +56,45 @@ function ProductItem({ product }) {
     }
 
     return (
-        <div
-            key={product.id}
-            onClick={goToProductPage}
-            className="w-full max-w-[250px] min-h-[380px] p-6 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
-        >
-            {/* Image Section */}
-            <div className="w-full h-[200px] flex items-center justify-center  ">
-                {imageUrl ? (
-                    <Image
-                        src={imageUrl}
-                        alt={image?.alternativeText || 'Product image'}
-                        width={200}
-                        height={200}
-                        className="object-contain max-h-full transition-transform duration-300 ease-in-out"
-                    />
-                ) : (
-                    <div className="text-red-500 text-sm">Nema slike</div>
-                )}
-            </div>
+ <div
+    key={product.id}
+    onClick={goToProductPage}
+    className=" w-full max-w-[250px] min-h-[320px] p-4 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
+>
+   {/* Image Section */}
+<div className="w-full h-[220px] flex items-center justify-center overflow-hidden rounded-t-lg">
+  {imageUrl ? (
+    <Image
+      src={imageUrl}
+      alt={image?.alternativeText || 'Product image'}
+      width={250}
+      height={220}
+      className="object-contain w-full h-full transition-transform duration-300 ease-in-out"
+      style={{ objectFit: 'contain' }}
+    />
+  ) : (
+    <div className="text-red-500 text-sm">Nema slike</div>
+  )}
+</div>
 
-            {/* Text Section */}
-            <div className="flex flex-col items-center justify-center w-full text-center px-2">
-                <h2 className="font-semibold text-md w-full mb-1 line-clamp-2 text-gray-800">
-                    {product.name}
-                </h2>
 
-                <h2 className="font-bold text-lg text-primary">
-                    {product.price.toFixed(2)} KM
-                </h2>
+    {/* Text Section */}
+    <div className="flex flex-col items-center justify-center w-full text-center px-2">
+        <h2 className="font-semibold text-md w-full mb-1 line-clamp-4 text-gray-800">
+            {product.name}
+        </h2>
 
-                <Button className="mt-4  sm:w-auto  " onClick={handleAddToCart}>
-                    Dodaj u korpu
-                </Button>
-            </div>
-        </div>
+        <h2 className="font-bold text-lg text-primary">
+            {product.price.toFixed(2)} KM
+        </h2>
+
+        <Button className="mt-3 sm:w-auto" onClick={handleAddToCart}>
+            Dodaj u korpu
+        </Button>
+    </div>
+</div>
+
+
     )
 }
 

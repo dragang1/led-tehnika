@@ -23,7 +23,16 @@ function ProductItemDetail({ product }) {
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState(product?.image[0]?.url); // State for the currently selected image
 
+ const audioRef = useRef(null);
 
+ const playSound = () => {
+  if (audioRef.current) {
+    audioRef.current.currentTime = 0; // resetuje zvuk
+    audioRef.current.play().catch((e) => {
+      console.error("Audio play failed:", e);
+    });
+  }
+};
 
     const handleAddToCart = () => {
         setLoading(true);
@@ -54,7 +63,7 @@ function ProductItemDetail({ product }) {
         addToCart(cartItem);
 
         // Feedback to user
-toast.success('Dodano u korpu'),
+toast.success('Dodano u korpu');
 playSound();
 
 
@@ -63,14 +72,10 @@ setTimeout(() => {
 }, 500);
 
     };
-    const audioRef = useRef(null);
+   
 
-  const playSound = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0; // resetuj na početak
-      audioRef.current.play();
-    }
-  };
+
+
 
 
 
@@ -120,7 +125,7 @@ setTimeout(() => {
                         <ShoppingCart />
                         {loading ? <LoaderCircle className='animate-spin' /> : 'Dodaj u korpu'}
                     </Button>
-            <audio ref={audioRef} src="/sounds/success-340660.mp3" preload="auto" />
+            <audio ref={audioRef} src="/sounds/success-340660.mp3" preload="auto"  />
                     <Link href={`/productDetail/${product?.documentId}`}>
                         <Button>Pogledaj</Button>
                     </Link>
