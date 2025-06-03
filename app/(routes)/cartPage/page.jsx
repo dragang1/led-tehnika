@@ -36,7 +36,7 @@ function CartPage() {
     };
 
     if (cart.length === 0) {
-        return <div className='flex justify-center items-center'>Korpa je prazna.</div>;
+        return <div className='flex justify-center items-center mt-10 '>Korpa je prazna.</div>;
     }
 
     return (
