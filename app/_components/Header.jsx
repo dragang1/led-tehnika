@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, X } from 'lucide-react';
 import Image from 'next/image';
 import GlobalApi from '../_utils/GlobalApi';
 import { useEffect, useState } from 'react';
@@ -57,10 +57,13 @@ function Header() {
                 {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     <CategoryDropdown categoryList={categoryList} />
-                    <Link href="/products" className="text-gray-700 hover:text-primary transition font-medium">
+                    <Link href="/ledTehnika" className="text-gray-700 hover:text-primary transition font-medium">
+                        Ko smo mi?
+                    </Link>
+                    <Link href="/proizvodi" className="text-gray-700 hover:text-primary transition font-medium">
                         Artikli
                     </Link>
-                    <Link href="/contact" className="text-gray-700 hover:text-primary transition font-medium">
+                    <Link href="/kontakt" className="text-gray-700 hover:text-primary transition font-medium">
                         Kontakt
                     </Link>
                 </div>
@@ -121,46 +124,116 @@ function Header() {
                     <>
                         {/* Dark Overlay */}
                         <motion.div
-                            className="fixed inset-0 bg-black bg-opacity-50 z-40"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={toggleMenu}
-                        />
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={toggleMenu}
+      />
 
-                        {/* Slide-in Panel */}
-                        <motion.div
-                            className="fixed top-0 right-0 h-full w-3/4 bg-white z-50 p-6 shadow-lg"
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'tween', duration: 0.3 }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {/* Close */}
-                            <div className="flex justify-end mb-4">
-                                <button
-                                    className="text-gray-600 hover:text-primary text-3xl"
-                                    onClick={toggleMenu}
-                                >
-                                    &times;
-                                </button>
-                            </div>
+      {/* Slide-in Panel */}
+      <motion.div
+        className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={toggleMenu}
+      />
 
-                            {/* Nav Links */}
-                            <nav className="flex flex-col gap-6 text-lg font-semibold text-gray-700">
-                                <Link href="/" onClick={toggleMenu}>
-                                    O nama
-                                </Link>
-                                <Link href="/products" onClick={toggleMenu}>
-                                    Artikli
-                                </Link>
-                                <Link href="/contact" onClick={toggleMenu}>
-                                    Kontakt
-                                </Link>
-                                
-                            </nav>
-                        </motion.div>
+      {/* Slide-in Panel */}
+      <motion.div
+        className="fixed top-0 right-0 h-full w-3/4 max-w-xs z-50 p-6 shadow-2xl rounded-l-3xl border-l border-gray-200 bg-gradient-to-b from-white to-blue-50"
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ type: 'tween', duration: 0.3 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={toggleMenu}
+            className="p-2 rounded-full hover:bg-blue-100 transition focus:outline-none"
+            aria-label="Zatvori meni"
+          >
+            <X size={28} className="text-blue-600 hover:text-blue-800 transition" />
+          </button>
+        </div>
+
+        {/* Logo & Opis */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-blue-700">Led Tehnika</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Stručnjaci za rasvjetu, automatiku i grijanje.
+          </p>
+          <hr className="my-4 border-blue-100" />
+        </div>
+
+        {/* Navigation Links */}
+        <motion.nav
+          className="flex flex-col gap-5 text-lg font-medium text-gray-800"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08,
+              },
+            },
+          }}
+        >
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+          >
+            <Link
+              href="/ledTehnika"
+              onClick={toggleMenu}
+              className="hover:text-blue-600 transition"
+            >
+              O nama
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+          >
+            <Link
+              href="/proizvodi"
+              onClick={toggleMenu}
+              className="hover:text-blue-600 transition"
+            >
+              Artikli
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+          >
+            <Link
+              href="/kontakt"
+              onClick={toggleMenu}
+              className="hover:text-blue-600 transition"
+            >
+              Kontakt
+            </Link>
+          </motion.div>
+        </motion.nav>
+
+        {/* Footer (optional) */}
+        <div className="mt-10 text-xs text-gray-400">
+          &copy; {new Date().getFullYear()} Led Tehnika
+        </div>
+      </motion.div>
                     </>
                 )}
             </AnimatePresence>

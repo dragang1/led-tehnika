@@ -59,7 +59,7 @@ export default function ContactPage() {
                 size={24}
               />
               <a
-                href="tel:+38166676620"
+                href="tel:+38766676620"
                 className="text-lg sm:text-xl font-semibold hover:text-amber-800 transition"
                 aria-label="Pozovi broj 066 676 620"
               >
@@ -73,7 +73,7 @@ export default function ContactPage() {
                 size={24}
               />
               <a
-                href="tel:+38165983652"
+                href="tel:+38765983652"
                 className="text-lg sm:text-xl font-semibold hover:text-amber-800 transition"
                 aria-label="Pozovi broj 065 983 652"
               >
