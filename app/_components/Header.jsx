@@ -158,9 +158,7 @@ function Header() {
                                 <Link href="/contact" onClick={toggleMenu}>
                                     Kontakt
                                 </Link>
-                                <Link href="/cartPage" onClick={toggleMenu}>
-                                    Korpa
-                                </Link>
+                                
                             </nav>
                         </motion.div>
                     </>

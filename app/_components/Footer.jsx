@@ -9,7 +9,7 @@ function Footer() {
                 <div
                     className="flex flex-col items-center gap-4 rounded-lg bg-indigo-600 p-6 shadow-lg sm:flex-row sm:justify-between"
                 >
-                    <strong className="text-xl text-white sm:text-xl"> Tu me cijene tu kupujem! </strong>
+                    <strong className="text-xl text-white sm:text-xl"> Kvalitet i povjerenje! </strong>
 
                     <Link href={'/products'}
                         className="inline-flex items-center gap-2 rounded-full border border-white bg-white px-8 py-3 text-indigo-600 hover:bg-transparent hover:text-white focus:outline-none focus:ring active:bg-white/90"
@@ -40,7 +40,7 @@ function Footer() {
                     <ul className="flex justify-center gap-6 sm:justify-end">
                         <li>
                             <Link
-                                href="#"
+                                href="https://www.facebook.com/p/LED-Tehnika-100063252848248/"
                                 rel="noreferrer"
                                 target="_blank"
                                 className="text-teal-700 transition hover:text-teal-700/75"
@@ -58,7 +58,7 @@ function Footer() {
 
                         <li>
                             <Link
-                                href="#"
+                                href="https://www.instagram.com/led_tehnika/"
                                 rel="noreferrer"
                                 target="_blank"
                                 className="text-teal-700 transition hover:text-teal-700/75"

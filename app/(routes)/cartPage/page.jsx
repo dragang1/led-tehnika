@@ -36,7 +36,7 @@ function CartPage() {
     };
 
     if (cart.length === 0) {
-        return <div>Your cart is empty.</div>;
+        return <div className='flex justify-center items-center'>Korpa je prazna.</div>;
     }
 
     return (
