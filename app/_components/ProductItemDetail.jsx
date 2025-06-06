@@ -29,7 +29,7 @@ function ProductItemDetail({ product }) {
   if (audioRef.current) {
     audioRef.current.currentTime = 0; // resetuje zvuk
     audioRef.current.play().catch((e) => {
-      console.error("Audio play failed:", e);
+      return;
     });
   }
 };

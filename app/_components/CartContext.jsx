@@ -6,17 +6,17 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
-    const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
+    const [isMounted, setIsMounted] = useState(false); 
 
     useEffect(() => {
-        // Load cart from localStorage after component mounts
+       
         const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCart(savedCart);
-        setIsMounted(true); // Mark component as mounted
+        setIsMounted(true); 
     }, []);
 
     useEffect(() => {
-        // Save cart to localStorage whenever it changes
+        
         if (isMounted) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }

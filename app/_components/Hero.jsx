@@ -12,15 +12,15 @@ function Hero() {
         const fetchImages = async () => {
             try {
                 const response = await GlobalApi.getSliders();
-                console.log('Full API Response:', response);
+             
 
                 if (!response || !Array.isArray(response) || response.length === 0) {
-                    console.error('API response is empty or invalid');
+                   
                     return;
                 }
 
                 const sliders = response[0]?.sliders || [];
-                console.log('Sliders:', sliders);
+              
 
                 // Map slider URLs to Cloudinary URLs (no need to hardcode Cloudinary base URL)
                 const imageUrls = sliders.map(slider => {
@@ -28,14 +28,14 @@ function Hero() {
                     return imageUrl ? imageUrl : null;
                 }).filter(Boolean);
 
-                console.log('Extracted Images:', imageUrls);
+               
                 setImages(imageUrls);
 
                 if (imageUrls.length > 0) {
                     setCurrentImageIndex(0);
                 }
             } catch (error) {
-                console.error('Error fetching images:', error);
+               return;
             }
         };
 

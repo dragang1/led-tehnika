@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from './_components/CartContext'; // Adjust the path accordingly
 import MenuItems from "./_components/MenuItems";
 import ScrollToTop from "./_components/ScrolltoTop";
+import Head from "next/head";
 
 const inter = Outfit({ subsets: ['latin'] });
 
@@ -22,6 +23,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+    <Head>
+        <title>Led Tehnika</title>
+        <meta name="description" content="Ekskluzivni uvoznik bazenske i LED rasvjete, motora za kapije,kalolifera i još mnogo toga." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <body className={inter.className}>
         <CartProvider>
           <Header />

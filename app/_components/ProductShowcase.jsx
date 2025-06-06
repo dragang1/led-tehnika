@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import GlobalApi from '@/app/_utils/GlobalApi';
-import Link from 'next/link';
-import RotatingText from './RotatingText';
+
 
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
@@ -15,10 +14,10 @@ const ProductShowcase = () => {
     const fetchProducts = async () => {
       try {
         const res = await GlobalApi.getAllProducts();
-        console.log('Fetched products:', res); // 🔍 Provjera podataka
+      
         setProductList(res || []);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
+        return;
       }
     };
 
@@ -36,8 +35,7 @@ const ProductShowcase = () => {
   const currentProduct = productList[currentIndex];
   const imageUrl = currentProduct?.image?.[0]?.url;
 
-  console.log('Current Product:', currentProduct); // 🔍 Provjera pojedinačnog proizvoda
-  console.log('Image URL:', imageUrl); // 🔍 Provjera slike
+
 
   return (
     <div className="w-full flex justify-center items-center p-8 bg-gray-100 rounded-xl shadow-2xl overflow-hidden relative max-w-[1200px] mx-auto">

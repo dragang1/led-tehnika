@@ -119,14 +119,14 @@ const OrderForm = () => {
                     phone: '',
                     customMessage: ''
                 });
-                setIsDialogOpen(true); // Open the dialog after successful submission
+                setIsDialogOpen(true); 
             } else {
-                const errorData = await response.json(); // Get the error message from Formspree
-                console.error('Error sending email:', errorData);
+                const errorData = await response.json(); 
+               
                 toast.error('Failed to send order details. Please try again later.');
             }
         } catch (error) {
-            console.error('Error sending email:', error);
+           
             toast.error('An error occurred. Please try again later.');
         }
     };

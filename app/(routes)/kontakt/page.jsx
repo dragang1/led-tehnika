@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Phone, MapPin } from 'lucide-react';
+import Head from 'next/head';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -45,6 +46,17 @@ export default function ContactPage() {
   };
 
   return (
+    <>
+
+    <Head>
+        <title>Kontaktirajte nas | Led Tehnika</title>
+        <meta name="description" content="Pozovite nas ili pošaljite poruku. Nalazimo se u Novoj Topoli. Pogledajte sve načine da stupite u kontakt sa nama." />
+        <link rel="canonical" href="https://ledtehnika.com/kontakt" />
+
+        <meta property="og:title" content="Kontakt | Led Tehnika" />
+  <meta property="og:description" content="Brzo nas kontaktirajte za informacije, narudžbe ili podršku." />
+  <meta property="og:url" content="https://ledtehnika.com/kontakt" />
+      </Head>
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full bg-white bg-opacity-40 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-12 flex flex-col md:flex-row gap-12">
         {/* Kontakt info */}
@@ -165,5 +177,6 @@ export default function ContactPage() {
         </form>
       </div>
     </div>
+    </>
   );
 }

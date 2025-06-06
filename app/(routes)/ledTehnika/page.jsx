@@ -2,9 +2,22 @@
 
 import { motion } from 'framer-motion';
 import { Lightbulb, Waves, DoorOpen, Flame } from 'lucide-react';
+import Head from 'next/head';
 
 export default function AboutPage() {
   return (
+    <>
+
+    <Head>
+  <title>O nama | Led Tehnika</title>
+  <meta name="description" content="Led Tehnika je ekskluzivni uvoznik LED rasvjete, bazenske rasvjete, motora za kapije i druge opreme." />
+  <link rel="canonical" href="https://ledtehnika.com/ledTehnika" />
+
+  <meta property="og:title" content="O nama | Led Tehnika" />
+  <meta property="og:description" content="Saznajte više o nama – našoj misiji, vrijednostima i iskustvu u oblasti LED i bazenske rasvjete." />
+  <meta property="og:url" content="https://ledtehnika.com/ledTehnika" />
+</Head>
+
     <div className="bg-gray-50 min-h-screen pt-12 pb-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Naslov */}
@@ -101,5 +114,6 @@ export default function AboutPage() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import { useCart } from '../../_components/CartContext'; // Adjust this path bas
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import Head from 'next/head';
 
 function CartPage() {
     const { cart, removeFromCart } = useCart();
@@ -40,6 +41,18 @@ function CartPage() {
     }
 
     return (
+        <>
+
+
+<Head>
+  <title>Led Tehnika |  Bazenska Rasvjeta, Motori za kapije, Grijanje,Led Rasvjeta</title>
+  <meta name="description" content="Ekskluzivni uvoznik LED rasvjete,bazenske rasvjete, motora za kapije i grijanja. Pogledajte naš asortiman!" />
+  <meta name="keywords" content="led rasvjeta, motori za kapije, grijanje, kaloliferi, bazenska rasvjeta,zidna lampa" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://ledtehnika.com" />
+</Head>
+
         <div className='p-7 bg-white text-black'>
             <h1 className='text-3xl font-bold mb-5'>Your Cart</h1>
             <div className='grid grid-cols-1 gap-5'>
@@ -66,6 +79,7 @@ function CartPage() {
             </div>
             <h2 className='text-2xl font-bold mt-5'>Total: {getTotalPrice()} KM</h2>
         </div>
+        </>
     );
 }
 
