@@ -1,5 +1,7 @@
 'use client';
 
+
+
 import GlobalApi from '@/app/_utils/GlobalApi';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -24,46 +26,42 @@ const ProductDetailPage = () => {
         const fetchProduct = async () => {
             if (!id) return;
             setLoading(true);
-            console.log("Current product ID:", id);
 
             try {
                 const productData = await GlobalApi.getProductById(id);
                 setProduct(productData);
-                setSelectedImage(productData.image?.[0]?.url || '');  // Handling case when image array is empty
+                setSelectedImage(productData.image?.[0]?.url || '');
 
                 if (productData?.kategorije?.name) {
-                    fetchRelatedProducts(productData.kategorije.name, productData.documentId);
+                    await fetchRelatedProducts(productData.kategorije.name, productData.documentId);
                 }
 
                 if (productData?.name) {
                     document.title = productData.name;
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
+                return null;
             } finally {
                 setLoading(false);
             }
 
-            return () => { document.title = 'Led Tehnika'; };
+            return () => {
+                document.title = 'Led Tehnika';
+            };
         };
 
-        console.log("Fetching product with documentId:", id);
         fetchProduct();
     }, [id]);
 
     const fetchRelatedProducts = async (categoryName, productDocumentId) => {
         try {
-            console.log("Fetching related products for category:", categoryName);
-
             const relatedProductsData = await GlobalApi.getProductsByCategory(categoryName);
-            console.log("Fetched related products:", relatedProductsData);
 
             const filteredRelatedProducts = relatedProductsData.filter(product => product.documentId !== productDocumentId);
-            console.log("Filtered Related Products:", filteredRelatedProducts);
 
             setRelatedProducts(filteredRelatedProducts);
         } catch (error) {
-            console.error("Error fetching related products:", error);
+            return null;
         }
     };
 
@@ -72,50 +70,35 @@ const ProductDetailPage = () => {
     const handleAddToCart = async () => {
         setLoading(true);
 
-        // Kreiraj cartItem sa documentId
         const cartItem = {
             quantity: quantity,
             amount: productTotalPrice.toFixed(2),
             product: {
                 ...product,
-                documentId: product.documentId, // Dodaj documentId
+                documentId: product.documentId,
             }
         };
 
-        // Uzmi cart iz lokalne memorije
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Pronađi proizvod u cartu koristeći documentId
         const existingProductIndex = cart.findIndex(item => item.product.documentId === product.documentId);
 
         if (existingProductIndex > -1) {
-            // Ako proizvod već postoji u korpi, ažuriraj količinu i cenu
             cart[existingProductIndex].quantity += quantity;
             cart[existingProductIndex].amount = cart[existingProductIndex].quantity * product.price;
         } else {
-            // Ako proizvod ne postoji, dodaj ga u korpu
             cart.push(cartItem);
         }
 
-        // Spremi ažurirani cart u lokalnu memoriju
         localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Pozovi addToCart funkciju iz konteksta
         addToCart(cartItem);
-
-        // Prikazivanje poruke o uspehu
         toast.success(`${product.name} je dodat u korpu!`)
-
-        // Zatvori loading stanje nakon 500ms
         setTimeout(() => setLoading(false), 500);
     };
-
 
     return (
         <div className='p-9 bg-white text-black mx-5 mt-5 border'>
             <div className='flex flex-col md:flex-row items-center justify-between'>
-                {/* Product Image */}
-                {/* Product Image */}
                 <div className='w-full md:w-1/2 flex justify-center items-center mb-5 md:mb-0'>
                     {selectedImage && (
                         <div className="relative w-[400px] h-[400px] max-w-full">
@@ -129,15 +112,12 @@ const ProductDetailPage = () => {
                     )}
                 </div>
 
-
-                {/* Product Details */}
                 <div className='w-full md:w-1/2 flex flex-col items-center md:items-start gap-4'>
                     <h2 className='text-2xl font-bold text-center md:text-left'>{product?.name}</h2>
                     <ReactMarkdown className='text-sm text-gray-500 text-center md:text-left'>
                         {product?.description}
                     </ReactMarkdown>
 
-                    {/* Thumbnails */}
                     <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
                         {product?.image?.map((image, index) => (
                             <Image
@@ -154,7 +134,6 @@ const ProductDetailPage = () => {
                         ))}
                     </div>
 
-                    {/* Price & Cart */}
                     <h2 className='font-bold text-3xl text-center md:text-left'>{product?.price?.toFixed(2)} KM</h2>
                     <div className='flex flex-col items-center md:items-start gap-3'>
                         <div className='mt-4 border-t border-gray-300 w-full' />
@@ -175,7 +154,6 @@ const ProductDetailPage = () => {
                 </div>
             </div>
 
-            {/* Related Products */}
             {relatedProducts.length > 0 && (
                 <div className="mt-12 px-4 sm:px-6 lg:px-0 max-w-screen-xl mx-auto">
                     <h3 className="text-2xl font-semibold text-gray-800 mb-6 text-center sm:text-left">
@@ -208,7 +186,6 @@ const ProductDetailPage = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
