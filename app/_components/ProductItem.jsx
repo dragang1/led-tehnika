@@ -14,7 +14,7 @@ function ProductItem({ product }) {
     const imageUrl = image?.formats?.small?.url || image?.url
 
     const handleAddToCart = (e) => {
-        e.stopPropagation() // Sprečava klik na karticu da otvori detalje
+        e.stopPropagation() 
 
         const cartItem = {
             quantity: 1,
@@ -25,7 +25,7 @@ function ProductItem({ product }) {
             }
         }
 
-        // Uzmi postojeci cart iz localStorage
+      
         let cart = JSON.parse(localStorage.getItem('cart')) || []
 
         const existingProductIndex = cart.findIndex(
@@ -41,13 +41,13 @@ function ProductItem({ product }) {
             cart.push(cartItem)
         }
 
-        // Spremi ažurirani cart
+     
         localStorage.setItem('cart', JSON.stringify(cart))
 
-        // Pozovi kontekstualnu metodu da ažurira UI
+      
         addToCart(cartItem)
 
-        // Prikazi toast
+     
         toast.success(`${product.name} je dodat u korpu!`)
     }
 
