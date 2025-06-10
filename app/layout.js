@@ -32,7 +32,7 @@ export const metadata = {
     siteName: "Led Tehnika",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-black.png",
         width: 1200,
         height: 630,
         alt: "Led Tehnika cover",
