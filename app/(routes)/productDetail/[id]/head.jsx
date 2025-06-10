@@ -12,6 +12,7 @@ export default async function Head({ params }) {
       </>
     );
   }
+  console.log(product)
 
   return (
     <>
