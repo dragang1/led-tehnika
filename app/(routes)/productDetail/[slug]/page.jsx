@@ -39,8 +39,37 @@ export async function generateMetadata({ params }) {
 
 
 export default async function Page({ params }) {
-  const {slug} = await params;
+  const { slug } = await params;
   const product = await GlobalApi.getProductBySlug(slug);
 
-  return <ProductDetailPage product={product} />;
+  // Pripremi JSON-LD podatke
+  const jsonLd = product ? {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image?.map(img => img.url) || [],
+    "description": product.description?.replace(/\n/g, ' ') || '',
+    "sku": product.documentId || '',
+    "offers": {
+      "@type": "Offer",
+      "url": `https://ledtehnika.com/productDetail/${slug}`,
+      "priceCurrency": "BAM", // ili druga valuta ako koristiš
+      "price": product.price?.toString() || '0',
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  } : null;
+
+  return (
+    <>
+      {product && (
+        <script
+          type="application/ld+json"
+          // Važno: JSON mora biti stringificiran
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <ProductDetailPage product={product} />
+    </>
+  );
 }
