@@ -1,10 +1,6 @@
 'use client';
 
-
-
-import GlobalApi from '@/app/_utils/GlobalApi';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { LoaderCircle, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -13,57 +9,15 @@ import { useCart } from '../../../_components/CartContext';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
-const ProductDetailPage = () => {
-    const { id } = useParams();
-    const [product, setProduct] = useState(null);
-    const { addToCart } = useCart();
+const ProductDetailPage = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [selectedImage, setSelectedImage] = useState('');
     const [relatedProducts, setRelatedProducts] = useState([]);
 
-    useEffect(() => {
-        const fetchProduct = async () => {
-            if (!id) return;
-            setLoading(true);
+    const [selectedImage, setSelectedImage] = useState(product?.image?.[0]?.url || '');
+    const { addToCart } = useCart();
 
-            try {
-                const productData = await GlobalApi.getProductById(id);
-                setProduct(productData);
-                setSelectedImage(productData.image?.[0]?.url || '');
-
-                if (productData?.kategorije?.name) {
-                    await fetchRelatedProducts(productData.kategorije.name, productData.documentId);
-                }
-
-                if (productData?.name) {
-                    document.title = productData.name;
-                }
-            } catch (error) {
-                return null;
-            } finally {
-                setLoading(false);
-            }
-
-            return () => {
-                document.title = 'Led Tehnika';
-            };
-        };
-
-        fetchProduct();
-    }, [id]);
-
-    const fetchRelatedProducts = async (categoryName, productDocumentId) => {
-        try {
-            const relatedProductsData = await GlobalApi.getProductsByCategory(categoryName);
-
-            const filteredRelatedProducts = relatedProductsData.filter(product => product.documentId !== productDocumentId);
-
-            setRelatedProducts(filteredRelatedProducts);
-        } catch (error) {
-            return null;
-        }
-    };
+    // Ostatak koda bez fetchovanja proizvoda, jer ga već imaš u prop-u
 
     const productTotalPrice = product ? product.price * quantity : 0;
 
@@ -75,7 +29,7 @@ const ProductDetailPage = () => {
             amount: productTotalPrice.toFixed(2),
             product: {
                 ...product,
-                documentId: product.documentId,
+                id: product.id,
             }
         };
 
@@ -92,7 +46,7 @@ const ProductDetailPage = () => {
 
         localStorage.setItem('cart', JSON.stringify(cart));
         addToCart(cartItem);
-        toast.success(`${product.name} je dodat u korpu!`)
+        toast.success(`${product.name} je dodat u korpu!`);
         setTimeout(() => setLoading(false), 500);
     };
 
@@ -162,7 +116,7 @@ const ProductDetailPage = () => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {relatedProducts.map((item) => (
-                            <Link key={item.documentId} href={`/productDetail/${item.documentId}`}>
+                            <Link key={item.documentId} href={`/productDetail/${item.slug}`}>
                                 <div className="flex flex-col h-full rounded-lg border border-gray-200 bg-white hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 overflow-hidden">
                                     <div className="relative w-full aspect-[4/3]">
                                         <Image

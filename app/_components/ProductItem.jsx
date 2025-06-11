@@ -51,9 +51,9 @@ function ProductItem({ product }) {
         toast.success(`${product.name} je dodat u korpu!`)
     }
 
-    const goToProductPage = () => {
-        router.push(`/productDetail/${product.documentId}`)
-    }
+   const goToProductPage = () => {
+  router.push(`/productDetail/${product.slug}`)
+}
 
     return (
  <div
