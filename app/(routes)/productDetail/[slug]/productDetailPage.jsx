@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { LoaderCircle, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useCart } from '../../../_components/CartContext';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion';
 
 const ProductDetailPage = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
@@ -18,6 +19,14 @@ const ProductDetailPage = ({ product }) => {
     const { addToCart } = useCart();
 
     // Ostatak koda bez fetchovanja proizvoda, jer ga već imaš u prop-u
+  const audioRef = useRef(null);
+
+    const playSound = () => {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
+      }
+    };
 
     const productTotalPrice = product ? product.price * quantity : 0;
 
@@ -47,11 +56,19 @@ const ProductDetailPage = ({ product }) => {
         localStorage.setItem('cart', JSON.stringify(cart));
         addToCart(cartItem);
         toast.success(`${product.name} je dodat u korpu!`);
+        playSound();
         setTimeout(() => setLoading(false), 500);
     };
 
     return (
-        <div className='p-9 bg-white text-black mx-5 mt-5 border'>
+        <motion.div 
+        className='p-9 bg-white text-black mx-5 mt-5 border'
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+        
+        
+        >
             <div className='flex flex-col md:flex-row items-center justify-between'>
                 <div className='w-full md:w-1/2 flex justify-center items-center mb-5 md:mb-0'>
                     {selectedImage && (
@@ -103,6 +120,7 @@ const ProductDetailPage = ({ product }) => {
                             {loading ? <LoaderCircle className='animate-spin' /> : <ShoppingCart />}
                             {loading ? 'Dodavanje...' : 'Dodaj u korpu'}
                         </Button>
+                        <audio ref={audioRef} src="/sounds/success-340660.mp3" preload="auto" />
                     </div>
                     <h2 className='mt-3'><span className='font-bold'>Kategorija: </span>{product?.kategorije?.name}</h2>
                 </div>
@@ -140,7 +158,7 @@ const ProductDetailPage = ({ product }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 };
 
