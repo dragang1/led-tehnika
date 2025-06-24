@@ -112,18 +112,7 @@ const ProductDetailPage = ({ product }) => {
       {product?.name}
     </h2>
 
-   
-    <ReactMarkdown className='prose prose-sm sm:prose-base text-gray-600 max-w-full text-center md:text-left'>
-      {product?.description}
-    </ReactMarkdown>
-      <div className="flex items-center gap-2">
-      <CheckCircle2 className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" />
-      <span className="text-green-600 font-semibold text-base sm:text-lg">Na stanju</span>
-    </div>
-
-
- 
-    <div className="flex flex-wrap gap-3 mt-3 justify-center md:justify-start">
+<div className="flex flex-wrap gap-3 mt-3 justify-center md:justify-start">
       {product?.image?.map((image, index) => (
         <Image
           key={index}
@@ -138,6 +127,18 @@ const ProductDetailPage = ({ product }) => {
         />
       ))}
     </div>
+   
+    <ReactMarkdown className='prose prose-sm sm:prose-base text-gray-600 max-w-full text-center md:text-left'>
+      {product?.description}
+    </ReactMarkdown>
+      <div className="flex items-center gap-2">
+      <CheckCircle2 className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" />
+      <span className="text-green-600 font-semibold text-base sm:text-lg">Na stanju</span>
+    </div>
+
+
+ 
+    
    
 
     

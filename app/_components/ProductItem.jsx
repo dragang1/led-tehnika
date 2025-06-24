@@ -5,9 +5,10 @@ import { useCart } from '@/app/_components/CartContext'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { toast } from 'sonner'
+import Link from 'next/link'
 
 function ProductItem({ product }) {
-    const router = useRouter()
+    
     const { addToCart } = useCart()
 
     const image = product?.image?.[0]
@@ -51,14 +52,13 @@ function ProductItem({ product }) {
         toast.success(`${product.name} je dodat u korpu!`)
     }
 
-   const goToProductPage = () => {
-  router.push(`/productDetail/${product.slug}`)
-}
+  
+
 
     return (
- <div
+ <Link href={`/productDetail/${product.slug}`} 
     key={product.id}
-    onClick={goToProductPage}
+    
     className=" w-full max-w-[250px] min-h-[320px] p-4 flex flex-col items-center justify-between gap-3 border rounded-lg hover:scale-105 hover:shadow-xl transition-all ease-in-out cursor-pointer"
 >
    {/* Image Section */}
@@ -92,7 +92,7 @@ function ProductItem({ product }) {
             Dodaj u korpu
         </Button>
     </div>
-</div>
+</Link>
 
 
     )

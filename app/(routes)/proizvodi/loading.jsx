@@ -2,7 +2,7 @@ import React from 'react'
 
 function loading() {
     return (
-        <div className='max-w-screen-xl mx-auto'>Loading...</div>
+        <div className='max-w-screen-xl mx-auto text-center'>Loading...</div>
     )
 }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
@@ -13,18 +13,17 @@ const ProductShowcase = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const fetchProducts = async () => {
-  try {
-    const res = await GlobalApi.getAllProducts();
-    const limited = (res || []).slice(0, 5); 
-    setProductList(limited);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+    const fetchProducts = async () => {
+      try {
+        const res = await GlobalApi.getAllProducts();
+        const limited = (res || []).slice(0, 5);
+        setProductList(limited);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchProducts();
   }, []);
@@ -52,7 +51,6 @@ const ProductShowcase = () => {
     <div className="w-full max-w-[1200px] mx-auto p-6 sm:p-10 bg-white rounded-2xl shadow-2xl relative overflow-hidden border border-gray-200 min-h-[500px]">
       <div className="relative flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16">
 
-    
         {productList.length > 1 && (
           <>
             <button
@@ -73,71 +71,71 @@ const ProductShowcase = () => {
           </>
         )}
 
-        
-        <AnimatePresence mode="wait">
+        {/* Product Content */}
+        <div className="w-full flex items-center justify-center min-h-[420px]">
           {loading ? (
             <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center text-center w-full min-h-[420px]"
+              
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.6, ease: 'easeInOut' }}
+  
+
+              className="flex flex-col items-center text-center w-full transition-opacity duration-700"
             >
               <div className="w-[220px] h-[200px] sm:w-[320px] sm:h-[260px] rounded-xl bg-gray-200 animate-pulse mb-4" />
               <div className="w-40 h-6 bg-gray-200 animate-pulse rounded" />
             </motion.div>
-          ) : (
-            currentProduct && (
-              <Link href={`/productDetail/${currentProduct.slug}`} className="no-underline">
-                <motion.div
-                  key={currentProduct.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 0.5 }}
-                  className="flex flex-col items-center text-center min-h-[380px] sm:min-h-[420px] justify-center cursor-pointer hover:scale-[1.02] transition-transform duration-300 ease-in-out"
-                >
-                  <div className="w-[220px] h-[200px] sm:w-[320px] sm:h-[260px] rounded-xl bg-gray-50 shadow-md overflow-hidden mb-4 flex items-center justify-center">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={currentProduct.name}
-                        width={320}
-                        height={260}
-                        className="object-contain w-full h-full p-2"
-                      />
-                    ) : (
-                      <div className="text-red-500">Nema slike</div>
-                    )}
-                  </div>
+          ) : currentProduct && (
+            <Link href={`/productDetail/${currentProduct.slug}`} className="no-underline">
+             <motion.div
+  key={currentProduct.id}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.6, ease: 'easeInOut' }}
+  className="flex flex-col items-center text-center min-h-[380px] sm:min-h-[420px] justify-center cursor-pointer transition-opacity duration-500"
+>
+  <div className="w-[220px] h-[200px] sm:w-[320px] sm:h-[260px] rounded-xl bg-gray-50 shadow-md overflow-hidden mb-4 flex items-center justify-center">
+    {imageUrl ? (
+      <Image
+        src={imageUrl}
+        alt={currentProduct.name}
+        width={320}
+        height={260}
+        className="object-contain w-full h-full p-2"
+      />
+    ) : (
+      <div className="text-red-500">Nema slike</div>
+    )}
+  </div>
 
-                  <h2 className="text-lg sm:text-2xl font-semibold text-gray-800 max-w-[90%] sm:max-w-[300px] leading-snug tracking-tight">
-                    {currentProduct.name}
-                  </h2>
-                </motion.div>
-              </Link>
-            )
+  <h2 className="text-lg sm:text-2xl font-semibold text-gray-800 max-w-[90%] sm:max-w-[300px] leading-snug tracking-tight">
+    {currentProduct.name}
+  </h2>
+</motion.div>
+
+            </Link>
           )}
-        </AnimatePresence>
+        </div>
       </div>
 
-    
+      {/* Dots */}
       {!loading && productList.length > 1 && (
         <div className="flex justify-center mt-6 space-x-3">
-  {productList.map((_, index) => (
-    <button
-      key={index}
-      onClick={() => setCurrentIndex(index)}
-      aria-label={`Prikaži proizvod ${index + 1}`}
-      className={`w-4 h-4 rounded-full transition-colors duration-300 focus:outline-none ${
-        index === currentIndex ? 'bg-black scale-110' : 'bg-gray-400 hover:bg-gray-600'
-      }`}
-      type="button"
-    />
-  ))}
-</div>
-
-
+          {productList.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              aria-label={`Prikaži proizvod ${index + 1}`}
+              className={`w-3 h-3 rounded-full transition-colors duration-300 focus:outline-none ${
+                index === currentIndex ? 'bg-black scale-110' : 'bg-gray-400 hover:bg-gray-600'
+              }`}
+              type="button"
+            />
+          ))}
+        </div>
       )}
     </div>
   );
