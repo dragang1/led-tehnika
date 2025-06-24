@@ -1,4 +1,4 @@
-const GlobalApi = require('./app/_utils/GlobalApi'); // prilagodi putanju
+const getProductsForSitemap = require('./getProductsForSitemap');
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
@@ -6,11 +6,11 @@ module.exports = {
   generateRobotsTxt: true,
   sitemapSize: 5000,
   exclude: ['/orderForm'],
-  additionalPaths: async (config) => {
-    const products = await GlobalApi.getAllProducts();
+  additionalPaths: async () => {
+    const products = await getProductsForSitemap();
 
     return products.map(product => ({
-      loc: `/productDetail/${product.slug}`, 
+      loc: `/productDetail/${product.slug}`,  
       lastmod: product.updatedAt,
     }));
   },
