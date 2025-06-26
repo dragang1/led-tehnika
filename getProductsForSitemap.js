@@ -28,3 +28,5 @@ getProductsForSitemap()
   .catch(err => {
     console.error('❌ Greška u funkciji:', err);
   });
+
+ 

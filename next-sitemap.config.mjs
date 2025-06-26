@@ -1,7 +1,7 @@
-const getProductsForSitemap = require('./getProductsForSitemap');
+import { getProductsForSitemap } from './getProductsForSitemap.js';
 
-/** @type {import('next-sitemap').IConfig} */
-module.exports = {
+
+export default {
   siteUrl: 'https://www.ledtehnika.com',
   generateRobotsTxt: true,
   sitemapSize: 5000,
@@ -10,7 +10,7 @@ module.exports = {
     const products = await getProductsForSitemap();
 
     return products.map(product => ({
-      loc: `/productDetail/${product.slug}`,  
+      loc: `/productDetail/${product.slug}`,
       lastmod: product.updatedAt,
     }));
   },
