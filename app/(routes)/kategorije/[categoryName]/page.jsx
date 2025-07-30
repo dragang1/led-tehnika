@@ -20,8 +20,13 @@ async function ProductCategory({ params }) {
 </div>
 
             <div className="py-5 md:py-10">
-                <ProductList productList={productList} />
-            </div>
+  {productList && productList.length > 0 ? (
+    <ProductList productList={productList} />
+  ) : (
+    <p className="text-center text-gray-500 text-lg">Stiže uskoro.</p>
+  )}
+</div>
+
         </div>
 
     )
