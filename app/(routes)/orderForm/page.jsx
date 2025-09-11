@@ -1,5 +1,7 @@
 'use client';
 
+import Head from "next/head";
+
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../_components/CartContext'; // Adjust path as needed
 import { toast } from "sonner";
@@ -132,6 +134,12 @@ const OrderForm = () => {
     };
 
     return (
+    <>
+
+        <Head>
+    <title>Led Tehnika | Završite Vašu narudžbu</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </Head>
         <div className="flex flex-col md:flex-row gap-4 p-6 max-w-6xl mx-auto bg-white rounded-lg mt-5"> {/* Increased max-width */}
             {/* Form Section with larger width */}
             <div className="flex-1 p-6 bg-gray-50 rounded-lg shadow-md">
@@ -294,6 +302,7 @@ const OrderForm = () => {
                 </div>
             </div>
         </div>
+    </>
 
 
 

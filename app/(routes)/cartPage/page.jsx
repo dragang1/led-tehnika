@@ -45,12 +45,11 @@ function CartPage() {
 
 
 <Head>
-  <title>Led Tehnika |  Bazenska Rasvjeta, Motori za kapije, Grijanje,Led Rasvjeta</title>
-  <meta name="description" content="Ekskluzivni uvoznik LED rasvjete,bazenske rasvjete, motora za kapije i grijanja. Pogledajte naš asortiman!" />
-  <meta name="keywords" content="led rasvjeta, motori za kapije, grijanje, kaloliferi, bazenska rasvjeta,zidna lampa" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://ledtehnika.com" />
+  <title>Led Tehnika |  Tvoja korpa</title>
+ 
+  <meta name="robots" content="noindex, nofollow" />
+
+  
 </Head>
 
         <div className='p-7 bg-white text-black'>

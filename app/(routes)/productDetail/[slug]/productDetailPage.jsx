@@ -11,6 +11,7 @@ import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import GlobalApi from '@/app/_utils/GlobalApi';
 
+
 const ProductDetailPage = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -82,6 +83,7 @@ const ProductDetailPage = ({ product }) => {
     };
 
     return (
+ 
         <motion.div 
         className='p-9 bg-white text-black mx-5 mt-5 border'
   initial={{ opacity: 0, y: 20 }}
@@ -222,6 +224,7 @@ const ProductDetailPage = ({ product }) => {
                 </div>
             )}
         </motion.div>
+      
     );
 };
 

@@ -5,7 +5,7 @@ export default {
   siteUrl: 'https://www.ledtehnika.com',
   generateRobotsTxt: true,
   sitemapSize: 5000,
-  exclude: ['/orderForm'],
+  exclude: ["/cartPage", "/orderForm"],
   additionalPaths: async () => {
     const products = await getProductsForSitemap();
 

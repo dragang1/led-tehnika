@@ -23,6 +23,9 @@ export const metadata = {
     "uvoznik rasvjete",
     "Led Tehnika"
   ],
+    alternates: {
+      canonical: "https://ledtehnika.com",  
+    },
   metadataBase: new URL("https://ledtehnika.com"), 
   openGraph: {
     title: "Led Tehnika",

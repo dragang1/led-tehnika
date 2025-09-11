@@ -17,6 +17,9 @@ export async function generateMetadata({ params }) {
     return {
       title: product.name,
       description: product.description?.slice(0, 160).replace(/\n/g, ' ') || 'Detalji proizvoda',
+       alternates: {
+        canonical: `https://ledtehnika.com/productDetail/${slug}`, 
+      },
       openGraph: {
         title: product.name,
         description: product.description?.slice(0, 160).replace(/\n/g, ' '),
