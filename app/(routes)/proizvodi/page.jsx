@@ -1,47 +1,67 @@
-'use client'
 import GlobalApi from '@/app/_utils/GlobalApi';
-import React, { useEffect, useState } from 'react';
-import ProductItem from '../../_components/ProductItem'; // Import ProductItem component
-import { toast } from 'sonner';
+import React from 'react';
+import ProductList from '../../_components/ProductList';
 
+export const metadata = {
+  title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
+  description: 'Pregled svih proizvoda na Led Tehnika. Motor za kapiju, LED rasvjeta, bazenska rasvjeta, kaloliferi i grijanje. Kvalitetni proizvodi po najboljim cijenama u Bosni.',
+  keywords: [
+    'motor za kapiju',
+    'motori za kapije',
+    'LED rasvjeta',
+    'bazenska rasvjeta',
+    'kaloliferi',
+    'grijanje',
+    'Led Tehnika',
+    'svi proizvodi',
+    'motor za kapiju Bosna',
+    'LED rasvjeta Bosna'
+  ],
+  alternates: {
+    canonical: 'https://ledtehnika.com/proizvodi',
+  },
+  openGraph: {
+    title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta | Led Tehnika',
+    description: 'Pregled svih proizvoda na Led Tehnika. Motor za kapiju, LED rasvjeta, bazenska rasvjeta i još mnogo toga.',
+    url: 'https://ledtehnika.com/proizvodi',
+    siteName: 'Led Tehnika',
+    type: 'website',
+    locale: 'bs_BA',
+    images: [{
+      url: 'https://ledtehnika.com/logo-black.png',
+      width: 1200,
+      height: 630,
+      alt: 'Led Tehnika - Svi proizvodi',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta | Led Tehnika',
+    description: 'Pregled svih proizvoda na Led Tehnika',
+    images: ['https://ledtehnika.com/logo-black.png'],
+  },
+};
 
-
-
-function AllProductsPage() {
-    const [products, setProducts] = useState([]);
-
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const fetchedProducts = await GlobalApi.getAllProducts();
-
-                setProducts(fetchedProducts);
-
-            } catch (error) {
-                toast.error('Greška na serveru. Pokušajte ponovo kasnije.');
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
-
+async function AllProductsPage() {
+    let products = [];
+    
+    try {
+        products = await GlobalApi.getAllProducts();
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
 
     return (
-       
-
-
-
         <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
-            <h2 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h2>
-            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 mt-4 container mx-auto p-4'>
-                {products.map((product, index) => (
-                    <ProductItem key={product.id} product={product} />
-                ))}
+            <h1 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h1>
+            <div className='py-5 md:py-10'>
+                {products && products.length > 0 ? (
+                    <ProductList productList={products} />
+                ) : (
+                    <p className="text-center text-gray-500 text-lg">Učitavanje proizvoda...</p>
+                )}
             </div>
         </div>
-       
     );
 }
 

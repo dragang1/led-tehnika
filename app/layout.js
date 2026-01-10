@@ -1,4 +1,5 @@
 import { Outfit } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
@@ -6,42 +7,58 @@ import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from './_components/CartContext';
 import MenuItems from "./_components/MenuItems";
 import ScrollToTop from "./_components/ScrolltoTop";
-import Head from "next/head";
 
 const inter = Outfit({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "Led Tehnika – Ekskluzivni uvoznik LED rasvjete",
+  title: {
+    default: "Led Tehnika – Motor za kapiju, LED rasvjeta, Bazenska rasvjeta",
+    template: "%s | Led Tehnika"
+  },
   description:
-    "Led Tehnika je ekskluzivni uvoznik bazenske rasvjete, LED rasvjete, motora za kapije, kalolifera, grijanja i još mnogo toga.",
+    "Led Tehnika je ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama.",
   keywords: [
+    "motor za kapiju",
+    "motori za kapije",
     "LED rasvjeta",
     "bazenska rasvjeta",
-    "motori za kapije",
     "grijanje",
     "kaloliferi",
     "uvoznik rasvjete",
-    "Led Tehnika"
+    "LED rasvjeta Bosna",
+    "motor za kapiju cijena",
+    "Led Tehnika",
+    "automatska kapija",
+    "kapijski motor",
+    "LED svjetla",
+    "bazensko osvjetljenje"
   ],
-    alternates: {
-      canonical: "https://ledtehnika.com",  
-    },
+  alternates: {
+    canonical: "https://ledtehnika.com",  
+  },
   metadataBase: new URL("https://ledtehnika.com"), 
   openGraph: {
-    title: "Led Tehnika",
+    title: "Led Tehnika – Motor za kapiju, LED i bazenska rasvjeta",
     description:
-      "Ekskluzivni uvoznik LED i bazenske rasvjete, motora za kapije, grijanja i kalolifera.",
+      "Ekskluzivni uvoznik motora za kapije, LED i bazenske rasvjete, grijanja i kalolifera. Kvalitetni proizvodi po najboljim cijenama u Bosni.",
     url: "https://ledtehnika.com",
     siteName: "Led Tehnika",
     images: [
       {
-        url: "/logo-black.png",
+        url: "https://ledtehnika.com/logo-black.png",
         width: 1200,
         height: 630,
-        alt: "Led Tehnika cover",
+        alt: "Led Tehnika - Motor za kapiju, LED rasvjeta",
       },
     ],
     type: "website",
+    locale: "bs_BA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Led Tehnika – Motor za kapiju, LED rasvjeta",
+    description: "Ekskluzivni uvoznik motora za kapije, LED i bazenske rasvjete",
+    images: ["https://ledtehnika.com/logo-black.png"],
   },
   icons: {
     icon: "/favicon.ico",
@@ -73,6 +90,13 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
@@ -99,13 +123,12 @@ const organizationSchema = {
 export default function RootLayout({ children }) {
   return (
     <html lang="bs">
-      <Head>
-        <script
+      <body className={inter.className}>
+        <Script
+          id="organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-      </Head>
-      <body className={inter.className}>
         <CartProvider>
           <Header />
           <div className="pt-24">
