@@ -90,7 +90,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: seoTitle,
         description: description,
-        type: 'product',
+        type: 'website',
         url: `${baseDomain}/productDetail/${slug}`,
         siteName: 'Led Tehnika',
         images: [
