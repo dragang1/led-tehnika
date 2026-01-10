@@ -56,10 +56,10 @@ async function AllProductsPage() {
             <h1 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h1>
             <div className='py-5 md:py-10'>
                 {products && products.length > 0 ? (
-                    <ProductList productList={products} />
-                ) : (
-                    <p className="text-center text-gray-500 text-lg">Učitavanje proizvoda...</p>
-                )}
+  <ProductList productList={products} limit={products.length} />
+) : (
+  <p className="text-center text-gray-500 text-lg">Učitavanje proizvoda...</p>
+)}
             </div>
         </div>
     );
