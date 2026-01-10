@@ -2,7 +2,7 @@ import { getProductsForSitemap } from './getProductsForSitemap.js';
 
 
 export default {
-  siteUrl: 'https://ledtehnika.com',
+  siteUrl: 'https://www.ledtehnika.com',
   generateRobotsTxt: true,
   sitemapSize: 5000,
   exclude: ["/cartPage", "/orderForm"],
