@@ -4,11 +4,19 @@ import TopCategoryList from '../_components/TopCategoryList';
 import ProductList from '@/app/_components/ProductList';
 
 export async function generateMetadata({ params }) {
-  const categoryName = decodeURIComponent(params.categoryName.replace(/-/g, ' '));
+  const { categoryName: categoryParam } = await params;
+  const categoryName = categoryParam ? decodeURIComponent(categoryParam.replace(/-/g, ' ')) : '';
   const baseDomain = 'https://ledtehnika.com';
   
   // SEO-optimized category metadata
   const getCategoryMetadata = (category) => {
+    if (!category) {
+      return {
+        title: 'Kategorija | Led Tehnika',
+        description: 'Kategorija proizvoda na Led Tehnika. Kvalitetni proizvodi po najboljim cijenama.',
+        keywords: ['Led Tehnika', 'kategorija', 'proizvodi']
+      };
+    }
     const lowerCategory = category.toLowerCase();
     
     // Special handling for gate motor category (motor za kapiju)
@@ -75,12 +83,12 @@ export async function generateMetadata({ params }) {
     description: metadata.description,
     keywords: metadata.keywords,
     alternates: {
-      canonical: `${baseDomain}/kategorije/${params.categoryName}`,
+      canonical: `${baseDomain}/kategorije/${categoryParam}`,
     },
     openGraph: {
       title: metadata.title,
       description: metadata.description,
-      url: `${baseDomain}/kategorije/${params.categoryName}`,
+      url: `${baseDomain}/kategorije/${categoryParam}`,
       siteName: 'Led Tehnika',
       type: 'website',
       locale: 'bs_BA',
@@ -105,12 +113,13 @@ export async function generateStaticParams() {
     const categories = await GlobalApi.getCategoryList();
     return categories.map((category) => {
       // Convert category name to URL-friendly format
-      const categoryName = category.name || category.attributes?.name || '';
+      const categoryName = category?.name || category?.attributes?.name || '';
+      if (!categoryName) return null;
       const urlFriendly = categoryName.toLowerCase().replace(/\s+/g, '-');
       return {
         categoryName: urlFriendly,
       };
-    }).filter(c => c.categoryName);
+    }).filter(c => c && c.categoryName);
   } catch (error) {
     console.error('Error generating category static params:', error);
     return [];
@@ -118,8 +127,9 @@ export async function generateStaticParams() {
 }
 
 async function ProductCategory({ params }) {
-    const categoryName = decodeURIComponent(params.categoryName.replace(/-/g, ' '));
-    const productList = await GlobalApi.getProductsByCategory(categoryName);
+    const { categoryName: categoryParam } = await params;
+    const categoryName = categoryParam ? decodeURIComponent(categoryParam.replace(/-/g, ' ')) : '';
+    const productList = categoryName ? await GlobalApi.getProductsByCategory(categoryName) : [];
     const categoryList = await GlobalApi.getCategoryList();
     
     // Breadcrumb structured data
@@ -142,8 +152,8 @@ async function ProductCategory({ params }) {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": categoryName,
-          "item": `https://ledtehnika.com/kategorije/${params.categoryName}`
+          "name": categoryName || 'Kategorija',
+          "item": `https://ledtehnika.com/kategorije/${categoryParam || ''}`
         }
       ]
     };
@@ -161,7 +171,7 @@ async function ProductCategory({ params }) {
               </h1>
 
       <div className="hidden sm:block">
-          <TopCategoryList categoryList={categoryList} selectedCategory={params.categoryName} />
+          <TopCategoryList categoryList={categoryList} selectedCategory={categoryParam} />
       </div>
 
               <div className="py-5 md:py-10">
