@@ -1,22 +1,11 @@
 import GlobalApi from '@/app/_utils/GlobalApi';
 import React from 'react';
 import ProductList from '../../_components/ProductList';
+import Breadcrumbs from '@/app/_components/Breadcrumbs';
 
 export const metadata = {
   title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
   description: 'Pregled svih proizvoda na Led Tehnika. Motor za kapiju, LED rasvjeta, bazenska rasvjeta, kaloliferi i grijanje. Kvalitetni proizvodi po najboljim cijenama u Bosni.',
-  keywords: [
-    'motor za kapiju',
-    'motori za kapije',
-    'LED rasvjeta',
-    'bazenska rasvjeta',
-    'kaloliferi',
-    'grijanje',
-    'Led Tehnika',
-    'svi proizvodi',
-    'motor za kapiju Bosna',
-    'LED rasvjeta Bosna'
-  ],
   alternates: {
     canonical: 'https://ledtehnika.com/proizvodi',
   },
@@ -51,9 +40,15 @@ async function AllProductsPage() {
         console.error('Error fetching products:', error);
     }
 
+    const breadcrumbItems = [
+        { label: 'Svi artikli', href: '#' }
+    ];
+
     return (
-        <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
-            <h1 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h1>
+        <>
+            <Breadcrumbs items={breadcrumbItems} />
+            <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
+                <h1 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h1>
             <div className='py-5 md:py-10'>
                 {products && products.length > 0 ? (
   <ProductList productList={products} limit={products.length} />
@@ -62,6 +57,7 @@ async function AllProductsPage() {
 )}
             </div>
         </div>
+        </>
     );
 }
 

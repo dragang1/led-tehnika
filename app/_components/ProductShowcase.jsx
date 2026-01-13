@@ -7,6 +7,19 @@ import Link from 'next/link';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
 import GlobalApi from '@/app/_utils/GlobalApi';
 
+// Helper function to get category slug from product
+const getCategorySlug = (product) => {
+  if (!product) return 'nepoznata-kategorija';
+  
+  // Data is already flattened - kategorije is an object with name (no slug)
+  const category = product.kategorije || {};
+  if (category.name) {
+    return category.name.toLowerCase().replace(/\s+/g, '-');
+  }
+  
+  return 'nepoznata-kategorija';
+};
+
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -45,7 +58,12 @@ const ProductShowcase = () => {
   };
 
   const currentProduct = productList[currentIndex];
+  
+  // Data is already flattened - API uses 'image' not 'images'
   const imageUrl = currentProduct?.image?.[0]?.url;
+  const productSlug = currentProduct?.slug || '';
+  const productName = currentProduct?.name || '';
+  const categorySlug = getCategorySlug(currentProduct);
 
   return (
     <div className="w-full max-w-[1200px] mx-auto p-6 sm:p-10 bg-white rounded-2xl shadow-2xl relative overflow-hidden border border-gray-200 min-h-[500px]">
@@ -88,7 +106,7 @@ const ProductShowcase = () => {
               <div className="w-40 h-6 bg-gray-200 animate-pulse rounded" />
             </motion.div>
           ) : currentProduct && (
-            <Link href={`/productDetail/${currentProduct.slug}`} className="no-underline">
+            <Link href={`/kategorije/${categorySlug}/${productSlug}`} className="no-underline">
              <motion.div
   key={currentProduct.id}
   initial={{ opacity: 0 }}
@@ -101,7 +119,7 @@ const ProductShowcase = () => {
     {imageUrl ? (
       <Image
         src={imageUrl}
-        alt={currentProduct.name}
+        alt={productName}
         width={320}
         height={260}
         className="object-contain w-full h-full p-2"
@@ -112,7 +130,7 @@ const ProductShowcase = () => {
   </div>
 
   <h2 className="text-lg sm:text-2xl font-semibold text-gray-800 max-w-[90%] sm:max-w-[300px] leading-snug tracking-tight">
-    {currentProduct.name}
+    {productName}
   </h2>
 </motion.div>
 

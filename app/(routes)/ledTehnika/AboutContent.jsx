@@ -2,10 +2,17 @@
 
 import { motion } from 'framer-motion';
 import { Lightbulb, Waves, DoorOpen, Flame } from 'lucide-react';
+import Breadcrumbs from '@/app/_components/Breadcrumbs';
 
 export default function AboutContent() {
+  const breadcrumbItems = [
+    { label: 'O nama', href: '#' }
+  ];
+
   return (
-    <div className="bg-gray-50 min-h-screen pt-12 pb-24">
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="bg-gray-50 min-h-screen pt-12 pb-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Naslov */}
         <motion.div
@@ -101,5 +108,6 @@ export default function AboutContent() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

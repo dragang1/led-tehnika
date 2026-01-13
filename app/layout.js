@@ -17,22 +17,6 @@ export const metadata = {
   },
   description:
     "Led Tehnika je ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama.",
-  keywords: [
-    "motor za kapiju",
-    "motori za kapije",
-    "LED rasvjeta",
-    "bazenska rasvjeta",
-    "grijanje",
-    "kaloliferi",
-    "uvoznik rasvjete",
-    "LED rasvjeta Bosna",
-    "motor za kapiju cijena",
-    "Led Tehnika",
-    "automatska kapija",
-    "kapijski motor",
-    "LED svjetla",
-    "bazensko osvjetljenje"
-  ],
   alternates: {
     canonical: "https://ledtehnika.com",  
   },
@@ -40,7 +24,7 @@ export const metadata = {
   openGraph: {
     title: "Led Tehnika – Motor za kapiju, LED i bazenska rasvjeta",
     description:
-      "Ekskluzivni uvoznik motora za kapije, LED i bazenske rasvjete, grijanja i kalolifera. Kvalitetni proizvodi po najboljim cijenama u Bosni.",
+      "motor za kapiju,Led rasvjeta,Bazenska rasvjeta,Kaloliferi,Grijanje,motori za kapije,Led traka,zidna lampa",
     url: "https://ledtehnika.com",
     siteName: "Led Tehnika",
     images: [
@@ -120,6 +104,69 @@ const organizationSchema = {
   ]
 };
 
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://ledtehnika.com/#localbusiness",
+  "name": "LED Tehnika",
+  "image": "https://ledtehnika.com/logo-black.png",
+  "url": "https://ledtehnika.com",
+  "telephone": "+38766676620",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Sime Matavulja 144",
+    "addressLocality": "Nova Topola",
+    "postalCode": "78418",
+    "addressCountry": "BA"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "45.0",
+    "longitude": "17.0"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "opens": "08:00",
+    "closes": "17:00"
+  },
+  "sameAs": [
+    "https://www.facebook.com/p/LED-Tehnika-100063252848248/",
+    "https://www.instagram.com/led_tehnika/"
+  ]
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Led Tehnika",
+  "url": "https://ledtehnika.com",
+  "description": "Led Tehnika je ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Led Tehnika",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ledtehnika.com/logo-black.png"
+    }
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://ledtehnika.com/proizvodi?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="bs">
@@ -128,6 +175,16 @@ export default function RootLayout({ children }) {
           id="organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <Script
+          id="localbusiness-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
+        <Script
+          id="website-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <CartProvider>
           <Header />

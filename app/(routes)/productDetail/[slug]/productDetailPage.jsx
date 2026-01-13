@@ -198,8 +198,15 @@ const ProductDetailPage = ({ product }) => {
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {relatedProducts.map((item) => (
-                            <Link key={item.documentId} href={`/productDetail/${item.slug}`}>
+                        {relatedProducts.map((item) => {
+                            // Generate category slug from name since API doesn't provide slug
+                            const category = item.kategorije || {};
+                            const categoryName = category.name || '';
+                            const categorySlug = categoryName ? categoryName.toLowerCase().replace(/\s+/g, '-') : 'nepoznata-kategorija';
+                            const productSlug = item.slug || '';
+                            
+                            return (
+                                <Link key={item.documentId} href={`/kategorije/${categorySlug}/${productSlug}`}>
                                 <div className="flex flex-col h-full rounded-lg border border-gray-200 bg-white hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 overflow-hidden">
                                     <div className="relative w-full aspect-[4/3]">
                                         <Image
@@ -219,7 +226,8 @@ const ProductDetailPage = ({ product }) => {
                                     </div>
                                 </div>
                             </Link>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}

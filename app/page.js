@@ -2,23 +2,8 @@ import GlobalApi from './_utils/GlobalApi';
 import HomeContent from './_components/HomeContent';
 
 export const metadata = {
-  title: 'Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
+  title: 'Motori za kapije, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
   description: 'Led Tehnika - ekskluzivni uvoznik motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama u Bosni.',
-  keywords: [
-    'motor za kapiju',
-    'motori za kapije',
-    'LED rasvjeta',
-    'bazenska rasvjeta',
-    'kaloliferi',
-    'grijanje',
-    'uvoznik rasvjete',
-    'Led Tehnika',
-    'motor za kapiju Bosna',
-    'LED rasvjeta Bosna',
-    'bazenska rasvjeta Bosna',
-    'kapijski motor',
-    'automatska kapija'
-  ],
   alternates: {
     canonical: 'https://ledtehnika.com',
   },

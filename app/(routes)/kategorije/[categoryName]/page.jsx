@@ -1,190 +1,179 @@
 import GlobalApi from '@/app/_utils/GlobalApi'
-import React from 'react'
-import TopCategoryList from '../_components/TopCategoryList';
-import ProductList from '@/app/_components/ProductList';
+import ProductList from '@/app/_components/ProductList'
+import TopCategoryList from '../_components/TopCategoryList'
+import Script from 'next/script'
+import { generateCategoryBreadcrumbSchema } from '@/lib/generateSchemas'
+import Breadcrumbs from '@/app/_components/Breadcrumbs'
 
 export async function generateMetadata({ params }) {
-  const { categoryName: categoryParam } = await params;
-  const categoryName = categoryParam ? decodeURIComponent(categoryParam.replace(/-/g, ' ')) : '';
-  const baseDomain = 'https://ledtehnika.com';
-  
-  // SEO-optimized category metadata
-  const getCategoryMetadata = (category) => {
+  const { categoryName } = await params
+  const baseDomain = 'https://ledtehnika.com'
+
+  try {
+    // Get all categories and find the one matching the slug
+    const categoryList = await GlobalApi.getCategoryList()
+    const category = categoryList.find(cat => {
+      const catSlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : ''
+      return catSlug === categoryName
+    })
+
     if (!category) {
       return {
-        title: 'Kategorija | Led Tehnika',
-        description: 'Kategorija proizvoda na Led Tehnika. Kvalitetni proizvodi po najboljim cijenama.',
-        keywords: ['Led Tehnika', 'kategorija', 'proizvodi']
-      };
+        title: 'Kategorija nije pronađena | Led Tehnika',
+        description: 'Tražena kategorija nije dostupna.',
+        alternates: {
+          canonical: `${baseDomain}/kategorije/${categoryName}`,
+        },
+      }
     }
-    const lowerCategory = category.toLowerCase();
-    
-    // Special handling for gate motor category (motor za kapiju)
-    if (lowerCategory.includes('motor') || lowerCategory.includes('kapij')) {
-      return {
-        title: `Motor za kapiju - ${category} | Led Tehnika`,
-        description: `Pronađite najbolji motor za kapiju - ${category} na Led Tehnika. Kvalitetni motori za kapije po najboljim cijenama u Bosni. Širok izbor automatskih motora za kapije.`,
-        keywords: [
-          'motor za kapiju',
-          'motori za kapije',
-          'kapijski motor',
-          'automatska kapija',
-          category,
-          'Led Tehnika',
-          'motor za kapiju cijena',
-          'motor za kapiju Bosna'
-        ]
-      };
-    }
-    
-    // LED lighting category
-    if (lowerCategory.includes('led') || lowerCategory.includes('rasvjet')) {
-      return {
-        title: `${category} - LED rasvjeta | Led Tehnika`,
-        description: `${category} na Led Tehnika. Kvalitetna LED rasvjeta po najboljim cijenama. Ekskluzivni uvoznik LED rasvjete u Bosni.`,
-        keywords: [
-          'LED rasvjeta',
-          category,
-          'LED svjetla',
-          'LED osvjetljenje',
-          'Led Tehnika',
-          'LED rasvjeta Bosna'
-        ]
-      };
-    }
-    
-    // Pool lighting category
-    if (lowerCategory.includes('bazen') || lowerCategory.includes('bazensk')) {
-      return {
-        title: `${category} - Bazenska rasvjeta | Led Tehnika`,
-        description: `${category} na Led Tehnika. Profesionalna bazenska rasvjeta i osvjetljenje. Kvalitetni proizvodi za bazensko osvjetljenje.`,
-        keywords: [
-          'bazenska rasvjeta',
-          'bazensko osvjetljenje',
-          category,
-          'Led Tehnika',
-          'bazenska rasvjeta Bosna'
-        ]
-      };
-    }
-    
-    // Default metadata
+
+    // Use the actual category name from database
+    const categoryTitle = category.name
+    const products = await GlobalApi.getProductsByCategoryName(categoryTitle)
+
+    const categoryDescription = category.description 
+      ? category.description.slice(0, 155).replace(/\n/g, ' ').trim()
+      : `${categoryTitle} - Kvalitetni proizvodi na Led Tehnika. Pregled svih proizvoda iz kategorije ${categoryTitle}.`
+
+    const imageUrl = category.icon?.url 
+      ? (category.icon.url.startsWith('http') 
+          ? category.icon.url 
+          : `https://led-backend-62tj.onrender.com${category.icon.url}`)
+      : 'https://ledtehnika.com/logo-black.png'
+
     return {
-      title: `${category} | Led Tehnika`,
-      description: `${category} na Led Tehnika. Kvalitetni proizvodi po najboljim cijenama. Ekskluzivni uvoznik i distributer.`,
-      keywords: [category, 'Led Tehnika', 'uvoznik', 'distributer']
-    };
-  };
-  
-  const metadata = getCategoryMetadata(categoryName);
-  
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    keywords: metadata.keywords,
-    alternates: {
-      canonical: `${baseDomain}/kategorije/${categoryParam}`,
-    },
-    openGraph: {
-      title: metadata.title,
-      description: metadata.description,
-      url: `${baseDomain}/kategorije/${categoryParam}`,
-      siteName: 'Led Tehnika',
-      type: 'website',
-      locale: 'bs_BA',
-      images: [{
-        url: `${baseDomain}/logo-black.png`,
-        width: 1200,
-        height: 630,
-        alt: `${categoryName} - Led Tehnika`,
-      }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: metadata.title,
-      description: metadata.description,
-      images: [`${baseDomain}/logo-black.png`],
-    },
-  };
+      title: `${categoryTitle} | Led Tehnika`,
+      description: categoryDescription,
+      alternates: {
+        canonical: `${baseDomain}/kategorije/${categoryName}`,
+      },
+      openGraph: {
+        title: `${categoryTitle} | Led Tehnika`,
+        description: categoryDescription,
+        url: `${baseDomain}/kategorije/${categoryName}`,
+        siteName: 'Led Tehnika',
+        type: 'website',
+        locale: 'bs_BA',
+        images: [{
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${categoryTitle} - Led Tehnika`,
+        }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${categoryTitle} | Led Tehnika`,
+        description: categoryDescription,
+        images: [imageUrl],
+      },
+    }
+  } catch (e) {
+    return {
+      title: 'Kategorija | Led Tehnika',
+      description: 'Pregled proizvoda na Led Tehnika.',
+      alternates: {
+        canonical: `${baseDomain}/kategorije/${categoryName}`,
+      },
+    }
+  }
 }
 
 export async function generateStaticParams() {
   try {
-    const categories = await GlobalApi.getCategoryList();
+    const categories = await GlobalApi.getCategoryList()
     return categories.map((category) => {
-      // Convert category name to URL-friendly format
-      const categoryName = category?.name || category?.attributes?.name || '';
-      if (!categoryName) return null;
-      const urlFriendly = categoryName.toLowerCase().replace(/\s+/g, '-');
+      const categoryName = category.name || ''
+      const categorySlug = categoryName ? categoryName.toLowerCase().replace(/\s+/g, '-') : 'nepoznata-kategorija'
       return {
-        categoryName: urlFriendly,
-      };
-    }).filter(c => c && c.categoryName);
+        categoryName: categorySlug,
+      }
+    }).filter((c) => c.categoryName)
   } catch (error) {
-    console.error('Error generating category static params:', error);
-    return [];
+    console.error('Error generating static params for categories:', error)
+    return []
   }
 }
 
-async function ProductCategory({ params }) {
-    const { categoryName: categoryParam } = await params;
-    const categoryName = categoryParam ? decodeURIComponent(categoryParam.replace(/-/g, ' ')) : '';
-    const productList = categoryName ? await GlobalApi.getProductsByCategory(categoryName) : [];
-    const categoryList = await GlobalApi.getCategoryList();
-    
-    // Breadcrumb structured data
-    const breadcrumbSchema = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Početna",
-          "item": "https://ledtehnika.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Kategorije",
-          "item": "https://ledtehnika.com/kategorije"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": categoryName || 'Kategorija',
-          "item": `https://ledtehnika.com/kategorije/${categoryParam || ''}`
-        }
-      ]
-    };
-    
+export default async function Page({ params }) {
+  const { categoryName } = await params
+  
+  let products = []
+  let categoryList = []
+  let actualCategory = null
+  
+  try {
+    // Get all categories and find the one matching the slug
+    categoryList = await GlobalApi.getCategoryList()
+    actualCategory = categoryList.find(cat => {
+      const catSlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : ''
+      return catSlug === categoryName
+    })
+
+    // If category found, use its actual name to fetch products
+    if (actualCategory) {
+      products = await GlobalApi.getProductsByCategoryName(actualCategory.name)
+    }
+  } catch (error) {
+    console.error('Error fetching category data:', error)
+  }
+
+  // If category not found, show error
+  if (!actualCategory) {
     return (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-          />
-          <div className="px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto">
-              <h1 className="w-full text-center text-white font-semibold text-lg md:text-2xl py-3 md:py-4 px-4 
-      bg-gradient-to-r from-blue-600 to-indigo-500 rounded-md shadow-md tracking-wide">
-                  {categoryName}
-              </h1>
-
-      <div className="hidden sm:block">
-          <TopCategoryList categoryList={categoryList} selectedCategory={categoryParam} />
+      <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
+        <h1 className='text-primary font-bold text-2xl mt-5 text-center'>
+          Kategorija nije pronađena
+        </h1>
+        <p className="text-center text-gray-500 text-lg mt-5">
+          Tražena kategorija ne postoji.
+        </p>
       </div>
-
-              <div className="py-5 md:py-10">
-        {productList && productList.length > 0 ? (
-          <ProductList productList={productList} />
-        ) : (
-          <p className="text-center text-gray-500 text-lg">Stiže uskoro.</p>
-        )}
-      </div>
-
-          </div>
-        </>
     )
-}
+  }
 
-export default ProductCategory
+  // Use actual category name from database
+  const categoryTitle = actualCategory.name
+  const baseDomain = 'https://ledtehnika.com'
+  const categorySlug = categoryName
+  const breadcrumbSchema = generateCategoryBreadcrumbSchema(
+    categoryTitle,
+    categorySlug,
+    baseDomain
+  )
+
+  const breadcrumbItems = [
+    { label: categoryTitle, href: `#` }
+  ];
+
+  return (
+    <>
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
+        <h1 className='text-primary font-bold text-2xl mt-5 text-center'>
+          {categoryTitle}
+        </h1>
+        
+        <TopCategoryList 
+          categoryList={categoryList} 
+          selectedCategory={categoryTitle} 
+        />
+        
+        <div className='py-5 md:py-10'>
+          {products && products.length > 0 ? (
+            <ProductList productList={products} limit={products.length} />
+          ) : (
+            <p className="text-center text-gray-500 text-lg">
+              Nema proizvoda u ovoj kategoriji.
+            </p>
+          )}
+        </div>
+      </div>
+    </>
+  )
+}

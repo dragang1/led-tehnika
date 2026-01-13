@@ -46,6 +46,23 @@ const getProductsByCategory = (category, productDocumentId) =>
             return [];
         });
 
+const getProductsByCategoryName = (categoryName) =>
+    axiosClient
+        .get(`/proizvodi?filters[kategorije][name][$eq]=${encodeURIComponent(categoryName)}&populate=*`)
+        .then(res => res.data.data)
+        .catch(() => {
+            return [];
+        });
+
+const getCategoryByName = async (categoryName) => {
+  try {
+    const res = await axiosClient.get(`/kategorije?filters[name][$eq]=${encodeURIComponent(categoryName)}&populate=*`);
+    return res.data.data?.[0] || null;
+  } catch (error) {
+    return null;
+  }
+};
+
 const addToCart = (data) => axiosClient.post('/user-carts', data, {
     headers: {
         'Content-Type': 'application/json'
@@ -58,6 +75,8 @@ export default {
     getCategoryList,
     getAllProducts,
     getProductsByCategory,
+    getProductsByCategoryName,
+    getCategoryByName,
     addToCart,
     getProductById,
     getProductBySlug

@@ -11,16 +11,22 @@ export async function getProductsForSitemap() {
     const products = data.data || [];
 
     return products.map(product => {
-      // Handle both Strapi v4 structure (with attributes) and flattened structure
-      const productData = product.attributes || product;
-      const slug = productData.slug || product.slug || '';
-      const updatedAt = productData.updatedAt || product.updatedAt || 
-                       productData.publishedAt || product.publishedAt || 
+      // Data is already flattened - no attributes wrapper
+      const slug = product.slug || '';
+      
+      // Get category slug - generate from name since API doesn't provide slug
+      const category = product.kategorije || {};
+      const categoryName = category.name || '';
+      const categorySlug = categoryName ? categoryName.toLowerCase().replace(/\s+/g, '-') : 'nepoznata-kategorija';
+      
+      const updatedAt = product.updatedAt || 
+                       product.publishedAt || 
                        product.updated_at || product.created_at || 
                        new Date().toISOString();
       
       return {
         slug: slug,
+        categorySlug: categorySlug,
         updatedAt: updatedAt,
       };
     }).filter(p => p.slug); // Only include products with valid slugs

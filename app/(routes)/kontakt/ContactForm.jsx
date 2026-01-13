@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { Phone, MapPin } from 'lucide-react';
+import Breadcrumbs from '@/app/_components/Breadcrumbs';
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -44,8 +45,14 @@ export default function ContactForm() {
     }
   };
 
+  const breadcrumbItems = [
+    { label: 'Kontakt', href: '#' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <>
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full bg-white bg-opacity-40 backdrop-blur-md rounded-3xl shadow-2xl p-8 sm:p-12 flex flex-col md:flex-row gap-12">
         {/* Kontakt info */}
         <div className="md:w-1/3 flex flex-col justify-center space-y-10 text-indigo-900">
@@ -165,5 +172,6 @@ export default function ContactForm() {
         </form>
       </div>
     </div>
+    </>
   );
 }

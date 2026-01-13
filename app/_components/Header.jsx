@@ -55,15 +55,15 @@ function Header() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden md:flex items-center gap-6">
                     <CategoryDropdown categoryList={categoryList} />
-                    <Link href="/ledTehnika" className="text-gray-700 hover:text-primary transition font-medium">
+                    <Link href="/ledTehnika" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
                         Ko smo mi?
                     </Link>
-                    <Link href="/proizvodi" className="text-gray-700 hover:text-primary transition font-medium">
+                    <Link href="/proizvodi" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
                         Artikli
                     </Link>
-                    <Link href="/kontakt" className="text-gray-700 hover:text-primary transition font-medium">
+                    <Link href="/kontakt" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
                         Kontakt
                     </Link>
                 </div>
@@ -91,7 +91,7 @@ function Header() {
                                 </SheetDescription>
                             </div>
                             {totalCartItem > 0 && (
-                                <SheetClose>
+                                <SheetClose asChild>
                                     <Button className="w-full mt-4" onClick={() => router.push('/orderForm')}>
                                         Naruči
                                     </Button>
@@ -171,7 +171,7 @@ function Header() {
 
         {/* Navigation Links */}
         <motion.nav
-          className="flex flex-col gap-5 text-lg font-medium text-gray-800"
+          className="flex flex-col gap-1 text-lg font-medium text-gray-800"
           initial="hidden"
           animate="visible"
           variants={{
@@ -183,6 +183,33 @@ function Header() {
             },
           }}
         >
+          {/* Categories Section */}
+          <div className="mb-2">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-1">Kategorije</p>
+            {categoryList?.slice(0, 5).map((cat, index) => {
+              const categorySlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : '';
+              return (
+                <motion.div
+                  key={cat.id || index}
+                  variants={{
+                    hidden: { opacity: 0, x: 20 },
+                    visible: { opacity: 1, x: 0 },
+                  }}
+                >
+                  <Link
+                    href={`/kategorije/${categorySlug}`}
+                    onClick={toggleMenu}
+                    className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors text-base"
+                  >
+                    {cat.name}
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="border-t border-gray-200 my-2" />
+
           <motion.div
             variants={{
               hidden: { opacity: 0, x: 20 },
@@ -192,7 +219,7 @@ function Header() {
             <Link
               href="/ledTehnika"
               onClick={toggleMenu}
-              className="hover:text-blue-600 transition"
+              className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               O nama
             </Link>
@@ -207,7 +234,7 @@ function Header() {
             <Link
               href="/proizvodi"
               onClick={toggleMenu}
-              className="hover:text-blue-600 transition"
+              className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               Artikli
             </Link>
@@ -222,7 +249,7 @@ function Header() {
             <Link
               href="/kontakt"
               onClick={toggleMenu}
-              className="hover:text-blue-600 transition"
+              className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               Kontakt
             </Link>

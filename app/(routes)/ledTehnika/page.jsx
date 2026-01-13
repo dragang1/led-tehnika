@@ -3,17 +3,6 @@ import AboutContent from './AboutContent';
 export const metadata = {
   title: 'O nama - Led Tehnika | Motor za kapiju, LED rasvjeta, Bazenska rasvjeta',
   description: 'Led Tehnika je ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete i grijanja. Kvalitetni proizvodi po najboljim cijenama u Bosni.',
-  keywords: [
-    'o nama Led Tehnika',
-    'motor za kapiju',
-    'LED rasvjeta',
-    'bazenska rasvjeta',
-    'uvoznik rasvjete',
-    'Led Tehnika Bosna',
-    'motori za kapije',
-    'kaloliferi',
-    'grijanje',
-  ],
   alternates: {
     canonical: 'https://ledtehnika.com/ledTehnika',
   },

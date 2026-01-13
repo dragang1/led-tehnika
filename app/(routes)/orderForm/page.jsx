@@ -1,9 +1,7 @@
 'use client';
 
-import Head from "next/head";
-
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../../_components/CartContext'; // Adjust path as needed
+import { useCart } from '../../_components/CartContext';
 import { toast } from "sonner";
 import {
     Dialog,
@@ -11,14 +9,19 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { LoaderCircle, CheckCircle2, ShoppingCart, User, MapPin, Phone, Mail, MessageSquare } from 'lucide-react';
+import Breadcrumbs from '@/app/_components/Breadcrumbs';
+import { motion } from 'framer-motion';
 
 const OrderForm = () => {
     const [isFormValid, setIsFormValid] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [showErrors, setShowErrors] = useState(false);
     const { cart, getTotalCartItems } = useCart();
 
     const [formData, setFormData] = useState({
@@ -31,7 +34,7 @@ const OrderForm = () => {
         city: ''
     });
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog visibility
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const router = useRouter();
 
     const totalCartItems = getTotalCartItems();
@@ -46,40 +49,83 @@ const OrderForm = () => {
     };
 
     const validateForm = () => {
-        const zipCodePattern = /^\d{5}(-\d{4})?$/; // Regex for ZIP code validation
-        const phonePattern = /^\d{7,15}$/; // Regex for phone number (minimum 7 digits, maximum 15)
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
+        const errors = {};
+        const zipCodePattern = /^\d{5}$/; // Bosnia ZIP code: 5 digits
+        const phonePattern = /^(\+387|0)?[1-9]\d{7,8}$/; // Bosnian phone number pattern
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (
-            !formData.name ||
-            !formData.address ||
-            !formData.zip ||
-            !formData.phone ||
-            !zipCodePattern.test(formData.zip) || // Invalid ZIP code
-            !phonePattern.test(formData.phone) || // Invalid phone number
-            (formData.email && !emailPattern.test(formData.email)) // Invalid email if provided
-        ) {
-            return false;
+        if (!formData.name || formData.name.trim().length < 2) {
+            errors.name = 'Ime i prezime mora imati najmanje 2 karaktera';
         }
-        return true;
+
+        if (!formData.address || formData.address.trim().length < 5) {
+            errors.address = 'Adresa mora imati najmanje 5 karaktera';
+        }
+
+        if (!formData.city || formData.city.trim().length < 2) {
+            errors.city = 'Grad je obavezan i mora imati najmanje 2 karaktera';
+        }
+
+        if (!formData.zip || !zipCodePattern.test(formData.zip)) {
+            errors.zip = 'Poštanski broj mora imati tačno 5 cifara';
+        }
+
+        if (!formData.phone || !phonePattern.test(formData.phone.replace(/\s+/g, ''))) {
+            errors.phone = 'Unesite validan broj telefona';
+        }
+
+        if (formData.email && !emailPattern.test(formData.email)) {
+            errors.email = 'Unesite validnu email adresu';
+        }
+
+        setFieldErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     useEffect(() => {
-        setIsFormValid(validateForm());
+        // Only validate silently for button state, don't show errors until submit
+        const zipCodePattern = /^\d{5}$/;
+        const phonePattern = /^(\+387|0)?[1-9]\d{7,8}$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        const isValid = 
+            formData.name && formData.name.trim().length >= 2 &&
+            formData.address && formData.address.trim().length >= 5 &&
+            formData.city && formData.city.trim().length >= 2 &&
+            formData.zip && zipCodePattern.test(formData.zip) &&
+            formData.phone && phonePattern.test(formData.phone.replace(/\s+/g, '')) &&
+            (!formData.email || emailPattern.test(formData.email));
+
+        setIsFormValid(isValid);
     }, [formData]);
+
+    // Redirect if cart is empty
+    useEffect(() => {
+        if (cart.length === 0) {
+            toast.error('Vaša korpa je prazna. Dodajte proizvode prije narudžbe.');
+            setTimeout(() => {
+                router.push('/proizvodi');
+            }, 2000);
+        }
+    }, [cart.length, router]);
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!isFormValid) {
-            toast.error('Please fill out all required fields correctly.');
-            return; // Prevent the dialog from being opened if the form is invalid
+        setShowErrors(true); // Show errors only on submit attempt
+        
+        if (!validateForm()) {
+            toast.error('Molimo popunite sva obavezna polja ispravno.');
+            return;
         }
 
         if (cart.length === 0) {
-            toast.error('Your cart is empty. Add products before submitting.');
+            toast.error('Vaša korpa je prazna. Dodajte proizvode prije narudžbe.');
+            router.push('/proizvodi');
             return;
         }
+
+        setIsSubmitting(true);
 
         // Gather order details as plain text for Formspree
         const orderDetails = `Ime kupca: ${formData.name}
@@ -100,18 +146,18 @@ const OrderForm = () => {
         };
 
         try {
-            const response = await fetch('https://formspree.io/f/xeoqjwzn', { // Ensure this is the correct endpoint
+            const response = await fetch('https://formspree.io/f/xeoqjwzn', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
-                    message: orderDetails, // Send order details as a message
+                    message: orderDetails,
                 }),
             });
 
             if (response.ok) {
-                toast.success('Order email sent successfully!');
+                toast.success('Narudžba je uspješno poslana!');
                 setFormData({
                     name: '',
                     email: '',
@@ -121,191 +167,348 @@ const OrderForm = () => {
                     phone: '',
                     customMessage: ''
                 });
-                setIsDialogOpen(true); 
+                setIsDialogOpen(true);
+                // Clear cart after successful order
+                localStorage.setItem('cart', JSON.stringify([]));
             } else {
-                const errorData = await response.json(); 
-               
-                toast.error('Failed to send order details. Please try again later.');
+                const errorData = await response.json();
+                toast.error('Greška pri slanju narudžbe. Molimo pokušajte ponovo.');
             }
         } catch (error) {
-           
-            toast.error('An error occurred. Please try again later.');
+            console.error('Order submission error:', error);
+            toast.error('Došlo je do greške. Molimo pokušajte ponovo.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    return (
-    <>
+    const breadcrumbItems = [
+        { label: 'Korpa', href: '/cartPage' },
+        { label: 'Narudžba', href: '#' }
+    ];
 
-        <Head>
-    <title>Led Tehnika | Završite Vašu narudžbu</title>
-    <meta name="robots" content="noindex, nofollow" />
-  </Head>
-        <div className="flex flex-col md:flex-row gap-4 p-6 max-w-6xl mx-auto bg-white rounded-lg mt-5"> {/* Increased max-width */}
-            {/* Form Section with larger width */}
-            <div className="flex-1 p-6 bg-gray-50 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-4">Završite Vašu narudžbu</h2>
-                <form onSubmit={handleSubmit}>
-                    {/* Form Fields */}
-                    <div className="mb-4">
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Ime i Prezime <span className='text-red-500'>*</span></label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">Adresa <span className='text-red-500'>*</span></label>
-                        <input
-                            type="text"
-                            id="address"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleInputChange}
-                            required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="city" className="block text-sm font-medium text-gray-700">Grad</label>
-                        <input
-                            type="text"
-                            id="city"
-                            name="city"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="zip" className="block text-sm font-medium text-gray-700">Poštanski broj <span className='text-red-500'>*</span></label>
-                        <input
-                            type="text"
-                            id="zip"
-                            name="zip"
-                            value={formData.zip}
-                            onChange={handleInputChange}
-                            required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Telefon <span className='text-red-500'>*</span></label>
-                        <input
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            required
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email (opcionalno)</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <label htmlFor="customMessage" className="block text-sm font-medium text-gray-700">Napomena</label>
-                        <textarea
-                            id="customMessage"
-                            name="customMessage"
-                            value={formData.customMessage}
-                            onChange={handleInputChange}
-                            rows="4"
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"
-                        />
-                    </div>
-
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button
-                                type="submit"
-                                disabled={!totalCartItems || !isFormValid}
-                            >
-                                Završi narudžbu
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Hvala!</DialogTitle>
-                                <DialogDescription>
-                                    Vaša narudžba je uspješna.
-                                </DialogDescription>
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
-                </form>
-            </div>
-
-            {/* Larger Simple Cart Item Card Section */}
-            <div className="p-8 bg-white rounded-lg shadow-md border border-gray-200 flex-1"> {/* Increased padding and flex-1 */}
-                <Image src='/logo-black.png' width={200} height={100} alt='logo' className="mx-auto mb-6" />
-
-                {cart.length > 0 ? (
-                    <ul className="space-y-4">
-                        {cart.map((item, index) => {
-                            const imageUrl = item.product.image?.[0]?.url
-                                ? item.product.image[0].url.startsWith('http')
-                                    ? item.product.image[0].url
-                                    : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL?.replace(/\/$/, '')}${item.product.image[0].url}`
-                                : '/path/to/placeholder-image.png';
-
-                            return (
-                                <li key={index} className="flex items-center gap-4 border-b pb-4">
-                                    <Image
-                                        src={imageUrl}
-                                        alt={item.product.name}
-                                        width={100}
-                                        height={100}
-                                        className="object-cover rounded-md"
-                                    />
-
-                                    <div className="flex-1">
-                                        <p className="text-lg font-semibold">{item.product.name || 'Nepoznat proizvod'}</p>
-                                        <p className="text-sm text-gray-600">Cijena po komadu: <span className="font-medium">{item.product.price.toFixed(2)} KM</span></p>
-                                        <p className="text-sm text-gray-600">Količina: <span className="font-medium">{item.quantity}</span></p>
-                                    </div>
-
-                                    <p className="text-lg font-semibold text-gray-900">
-                                        {(item.quantity * item.product.price).toFixed(2)} KM
-                                    </p>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                ) : (
-                    <p className="text-center text-gray-500">Vaša korpa je prazna.</p>
-                )}
-
-                {/* Total Section */}
-                <div className="mt-6 flex justify-between font-semibold text-lg text-gray-900">
-                    <p>Ukupno :</p>
-                    <p>{totalPrice.toFixed(2)} KM</p>
+    if (cart.length === 0) {
+        return (
+            <div className="max-w-4xl mx-auto px-4 py-12">
+                <Breadcrumbs items={breadcrumbItems} />
+                <div className="text-center py-12 bg-white rounded-xl shadow-lg mt-5">
+                    <ShoppingCart className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Vaša korpa je prazna</h2>
+                    <p className="text-gray-600 mb-6">Dodajte proizvode u korpu prije narudžbe.</p>
+                    <Button onClick={() => router.push('/proizvodi')} className="bg-blue-600 hover:bg-blue-700">
+                        Pregledaj proizvode
+                    </Button>
                 </div>
             </div>
-        </div>
-    </>
+        );
+    }
 
+    return (
+        <>
+            <Breadcrumbs items={breadcrumbItems} />
+            <motion.div 
+                className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-4 sm:p-6 max-w-7xl mx-auto mt-5"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                {/* Form Section */}
+                <div className="flex-1 p-6 sm:p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+                    <div className="mb-6">
+                        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Završite Vašu narudžbu</h1>
+                        <p className="text-gray-600">Molimo popunite sve podatke za dostavu</p>
+                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Name Field */}
+                        <div>
+                            <label htmlFor="name" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                <User className="w-4 h-4" />
+                                Ime i Prezime <span className='text-red-500'>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                    fieldErrors.name 
+                                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } focus:outline-none focus:ring-2`}
+                                placeholder="Unesite ime i prezime"
+                            />
+                            {showErrors && fieldErrors.name && (
+                                <p className="mt-1 text-sm text-red-600">{fieldErrors.name}</p>
+                            )}
+                        </div>
 
+                        {/* Address Field */}
+                        <div>
+                            <label htmlFor="address" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                <MapPin className="w-4 h-4" />
+                                Adresa <span className='text-red-500'>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleInputChange}
+                                className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                    fieldErrors.address 
+                                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } focus:outline-none focus:ring-2`}
+                                placeholder="Unesite adresu"
+                            />
+                            {showErrors && fieldErrors.address && (
+                                <p className="mt-1 text-sm text-red-600">{fieldErrors.address}</p>
+                            )}
+                        </div>
 
+                        {/* City and ZIP Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="city" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                    <MapPin className="w-4 h-4" />
+                                    Grad <span className='text-red-500'>*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleInputChange}
+                                    className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                        showErrors && fieldErrors.city 
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    } focus:outline-none focus:ring-2`}
+                                    placeholder="Unesite grad"
+                                />
+                                {showErrors && fieldErrors.city && (
+                                    <p className="mt-1 text-sm text-red-600">{fieldErrors.city}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label htmlFor="zip" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                    <MapPin className="w-4 h-4" />
+                                    Poštanski broj <span className='text-red-500'>*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="zip"
+                                    name="zip"
+                                    value={formData.zip}
+                                    onChange={handleInputChange}
+                                    maxLength={5}
+                                    className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                        fieldErrors.zip 
+                                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                    } focus:outline-none focus:ring-2`}
+                                    placeholder="71000"
+                                />
+                                {showErrors && fieldErrors.zip && (
+                                    <p className="mt-1 text-sm text-red-600">{fieldErrors.zip}</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Phone Field */}
+                        <div>
+                            <label htmlFor="phone" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                <Phone className="w-4 h-4" />
+                                Telefon <span className='text-red-500'>*</span>
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleInputChange}
+                                className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                    fieldErrors.phone 
+                                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } focus:outline-none focus:ring-2`}
+                                placeholder="+387 61 123 456"
+                            />
+                            {showErrors && fieldErrors.phone && (
+                                <p className="mt-1 text-sm text-red-600">{fieldErrors.phone}</p>
+                            )}
+                        </div>
+
+                        {/* Email Field */}
+                        <div>
+                            <label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                <Mail className="w-4 h-4" />
+                                Email (opcionalno)
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                className={`w-full px-4 py-3 border rounded-lg transition-colors ${
+                                    fieldErrors.email 
+                                        ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                                        : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                } focus:outline-none focus:ring-2`}
+                                placeholder="vas.email@primjer.com"
+                            />
+                            {showErrors && fieldErrors.email && (
+                                <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+                            )}
+                        </div>
+
+                        {/* Message Field */}
+                        <div>
+                            <label htmlFor="customMessage" className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+                                <MessageSquare className="w-4 h-4" />
+                                Napomena
+                            </label>
+                            <textarea
+                                id="customMessage"
+                                name="customMessage"
+                                value={formData.customMessage}
+                                onChange={handleInputChange}
+                                rows="4"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors resize-none"
+                                placeholder="Dodatne napomene ili upute za dostavu..."
+                            />
+                        </div>
+
+                        {/* Submit Button */}
+                        <Button
+                            type="submit"
+                            disabled={!totalCartItems || !isFormValid || isSubmitting}
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-lg py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <LoaderCircle className="w-5 h-5 mr-2 animate-spin" />
+                                    Slanje narudžbe...
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCircle2 className="w-5 h-5 mr-2" />
+                                    Završi narudžbu
+                                </>
+                            )}
+                        </Button>
+                    </form>
+
+                    {/* Success Dialog */}
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
+                                    <CheckCircle2 className="w-10 h-10 text-green-600" />
+                                </div>
+                                <DialogTitle className="text-2xl text-center">Hvala Vam!</DialogTitle>
+                                <DialogDescription className="text-center text-base mt-2">
+                                    Vaša narudžba je uspješno poslana. Kontaktiraćemo Vas uskoro.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="mt-6 flex gap-3">
+                                <Button
+                                    onClick={() => {
+                                        setIsDialogOpen(false);
+                                        router.push('/proizvodi');
+                                    }}
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                >
+                                    Nastavite kupovinu
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setIsDialogOpen(false);
+                                        router.push('/');
+                                    }}
+                                    variant="outline"
+                                    className="flex-1"
+                                >
+                                    Početna
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+
+                {/* Cart Summary Section */}
+                <div className="w-full lg:w-96 p-6 sm:p-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg border border-gray-200 sticky top-24 h-fit">
+                    <div className="mb-6">
+                        <Image 
+                            src='/logo-black.png' 
+                            width={180} 
+                            height={90} 
+                            alt='Led Tehnika logo' 
+                            className="mx-auto"
+                        />
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-300">
+                        Pregled narudžbe
+                    </h3>
+
+                    <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                        {cart.map((item, index) => {
+                            const getImageUrl = (img) => {
+                                if (!img?.url) return '/placeholder.png';
+                                if (img.url.startsWith('http')) return img.url;
+                                return `https://led-backend-62tj.onrender.com${img.url}`;
+                            };
+
+                            const imageUrl = item.product.image?.[0] 
+                                ? getImageUrl(item.product.image[0])
+                                : '/placeholder.png';
+
+                            return (
+                                <div key={index} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                                    <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                                        <Image
+                                            src={imageUrl}
+                                            alt={item.product.name}
+                                            fill
+                                            className="object-contain p-2"
+                                        />
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-gray-900 line-clamp-2 mb-1">
+                                            {item.product.name || 'Nepoznat proizvod'}
+                                        </p>
+                                        <p className="text-xs text-gray-600 mb-1">
+                                            {item.product.price.toFixed(2)} KM × {item.quantity}
+                                        </p>
+                                        <p className="text-sm font-bold text-blue-600">
+                                            {(item.quantity * item.product.price).toFixed(2)} KM
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Total Section */}
+                    <div className="mt-6 pt-6 border-t-2 border-gray-300">
+                        <div className="flex justify-between items-center mb-2">
+                            <span className="text-lg font-semibold text-gray-700">Ukupno:</span>
+                            <span className="text-2xl font-bold text-blue-600">
+                                {totalPrice.toFixed(2)} KM
+                            </span>
+                        </div>
+                        <p className="text-xs text-gray-500 text-center mt-4">
+                            * Cijene su u konvertibilnim markama (KM)
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+        </>
     );
 };
 

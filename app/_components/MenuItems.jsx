@@ -61,7 +61,7 @@ function MenuItems() {
                                 </SheetDescription>
                             </div>
                             {totalCartItem > 0 && (
-                                <SheetClose>
+                                <SheetClose asChild>
                                     <Button className='w-full' onClick={() => router.push('/orderForm')}>Naruči</Button>
                                 </SheetClose>
                             )}
