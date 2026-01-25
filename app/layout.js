@@ -5,7 +5,6 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from './_components/CartContext';
-import MenuItems from "./_components/MenuItems";
 import ScrollToTop from "./_components/ScrolltoTop";
 
 const inter = Outfit({ subsets: ['latin'] });
@@ -173,7 +172,6 @@ export default function RootLayout({ children }) {
             {children}
           </div>
           <Toaster duration={1000} richColors />
-          <MenuItems />
           <Footer />
         </CartProvider>
       </body>
