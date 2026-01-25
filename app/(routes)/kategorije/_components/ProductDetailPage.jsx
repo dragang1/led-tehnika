@@ -174,6 +174,56 @@ const ProductDetailPage = ({ product, categoryName, categorySlug }) => {
             </div>
           )}
 
+          {/* Available Variants Block */}
+          {(() => {
+            const wallLampVariants = [
+              { slug: 'zidna-lampa-4-x-3-w-3000-k-220-v', label: '4×3W' },
+              { slug: 'zidna-lampa-6-x-3-w-3000-k-220-v', label: '6×3W' },
+              { slug: 'zidna-lampa-8-x-3-w-3000-k-220-v', label: '8×3W' },
+              { slug: 'zidna-lampa-12-x-3-w-3000-k-220-v', label: '12×3W' }
+            ];
+            
+            const currentSlug = product?.slug;
+            const isWallLampVariant = wallLampVariants.some(v => v.slug === currentSlug);
+            
+            if (!isWallLampVariant) return null;
+            
+            return (
+              <div className='bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-200'>
+                <h3 className='text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4'>
+                  Dostupne varijante
+                </h3>
+                <div className='flex flex-wrap gap-2 sm:gap-3'>
+                  {wallLampVariants.map((variant) => {
+                    const isCurrent = variant.slug === currentSlug;
+                    const variantUrl = `/kategorije/${categorySlug}/${variant.slug}`;
+                    
+                    if (isCurrent) {
+                      return (
+                        <span
+                          key={variant.slug}
+                          className='px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-400 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed'
+                        >
+                          {variant.label}
+                        </span>
+                      );
+                    }
+                    
+                    return (
+                      <Link
+                        key={variant.slug}
+                        href={variantUrl}
+                        className='px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 transition-colors'
+                      >
+                        {variant.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Price Section */}
           <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100'>
             <div className='flex items-baseline gap-3'>
