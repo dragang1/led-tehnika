@@ -28,9 +28,21 @@ const ProductShowcase = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        // Fetch featured product first
+        const featuredProduct = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
         const res = await GlobalApi.getAllProducts();
-        const limited = (res || []).slice(0, 5);
-        setProductList(limited);
+        
+        // Filter out featured product from all products
+        const otherProducts = (res || []).filter(
+          p => p.slug !== 'motor-za-kapiju-set'
+        ).slice(0, 4);
+        
+        // Combine: featured product first, then others
+        const productList = featuredProduct 
+          ? [featuredProduct, ...otherProducts]
+          : otherProducts.slice(0, 5);
+        
+        setProductList(productList);
       } catch (error) {
         console.error(error);
       } finally {

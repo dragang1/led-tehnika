@@ -1,193 +1,324 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import GlobalApi from '../_utils/GlobalApi';
-import ProductShowcase from './ProductShowcase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShoppingCart, ArrowRight } from 'lucide-react';
 
-function Hero() {
-    const [images, setImages] = useState([]);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+function Hero({ children }) {
+    const [featuredProduct, setFeaturedProduct] = useState(null);
+    const [sliderData, setSliderData] = useState([]);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
 
-    useEffect(() => {
-        const fetchImages = async () => {
-            try {
-                const response = await GlobalApi.getSliders();
+    // E-commerce messages for slider slides
+    const sliderMessages = [
+        {
+            title: "Potrebna ti je",
+            highlight: "LED Rasvjeta?",
+            description: "Ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama."
+        },
+        {
+            title: "Dostava",
+            highlight: "na sve proizvode",
+            description: "Dostava na teritoriji cijele Bosne i Hercegovine. Brza i sigurna dostava direktno na vašu adresu. Naručite danas!"
+        },
+        {
+            title: "Garancija kvalitete",
+            highlight: "i podrška",
+            description: "Svi proizvodi sa garancijom. Profesionalna instalacija i tehnička podrška. Vaše zadovoljstvo je naš prioritet."
+        },
+        {
+            title: "Najbolje cijene",
+            highlight: "u BiH",
+            description: "Kvalitetni proizvodi po najboljim cijenama. Specijalne ponude i popusti za veće narudžbe. Kontaktirajte nas!"
+        },
+        {
+            title: "Moderna rješenja",
+            highlight: "za vaš dom",
+            description: "LED rasvjeta, automatski motori za kapije, bazenska rasvjeta i grijanje. Sve što vam treba na jednom mjestu."
+        }
+    ];
 
-                if (!response || !Array.isArray(response) || response.length === 0) {
-                    return;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch featured product
+                const product = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
+                if (product) {
+                    const category = product.kategorije || {};
+                    const categorySlug = category.name ? category.name.toLowerCase().replace(/\s+/g, '-') : 'automatizacija';
+                    const productImage = product.image?.[0]?.url;
+                    let imageUrl = null;
+                    
+                    if (productImage) {
+                        if (productImage.startsWith('http')) {
+                            imageUrl = productImage;
+                        } else if (productImage.startsWith('/uploads/') || productImage.startsWith('/api/')) {
+                            imageUrl = `https://led-backend-62tj.onrender.com${productImage}`;
+                        } else {
+                            imageUrl = productImage.startsWith('/') 
+                                ? `https://ledtehnika.com${productImage}`
+                                : `https://ledtehnika.com/${productImage}`;
+                        }
+                    }
+
+                    if (imageUrl) {
+                        setFeaturedProduct({
+                            ...product,
+                            categorySlug,
+                            imageUrl
+                        });
+                    }
                 }
 
-                const sliders = response[0]?.sliders || [];
-
-                // Map slider URLs to Cloudinary URLs
-                const imageUrls = sliders.map(slider => {
-                    const imageUrl = slider?.url?.replace(/^\//, '');
-                    return imageUrl ? imageUrl : null;
-                }).filter(Boolean);
-
-                setImages(imageUrls);
-
-                if (imageUrls.length > 0) {
-                    setCurrentImageIndex(0);
+                // Fetch slider images
+                const response = await GlobalApi.getSliders();
+                if (response && Array.isArray(response) && response.length > 0) {
+                    const sliders = response[0]?.sliders || [];
+                    const sliderItems = sliders
+                        .map((slider, index) => {
+                            const url = slider?.url?.replace(/^\//, '');
+                            if (!url) return null;
+                            let imageUrl = null;
+                            if (url.startsWith('http')) {
+                                imageUrl = url;
+                            } else if (url.startsWith('/uploads/') || url.startsWith('/api/')) {
+                                imageUrl = `https://led-backend-62tj.onrender.com${url}`;
+                            } else {
+                                imageUrl = url.startsWith('/') ? `https://ledtehnika.com${url}` : `https://ledtehnika.com/${url}`;
+                            }
+                            return {
+                                imageUrl,
+                                title: slider?.title || sliderMessages[index % sliderMessages.length].title,
+                                description: slider?.description || sliderMessages[index % sliderMessages.length].description,
+                                highlight: sliderMessages[index % sliderMessages.length].highlight
+                            };
+                        })
+                        .filter(Boolean);
+                    setSliderData(sliderItems);
                 }
             } catch (error) {
-                return;
+                console.error('Error fetching hero data:', error);
             }
         };
 
-        fetchImages();
+        fetchData();
     }, []);
 
     // Auto-slide effect
     useEffect(() => {
-        if (images.length === 0 || isPaused) return;
-
+        if (sliderData.length <= 1 || isPaused) return;
         const interval = setInterval(() => {
-            setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
+            setCurrentSlideIndex(prevIndex => (prevIndex + 1) % sliderData.length);
         }, 5000);
-
         return () => clearInterval(interval);
-    }, [images, isPaused]);
+    }, [sliderData, isPaused]);
 
-    const goToSlide = (index) => {
-        setCurrentImageIndex(index);
-    };
+    const goToSlide = (index) => setCurrentSlideIndex(index);
+    const goToPrevious = () => setCurrentSlideIndex(prevIndex => (prevIndex - 1 + sliderData.length) % sliderData.length);
+    const goToNext = () => setCurrentSlideIndex(prevIndex => (prevIndex + 1) % sliderData.length);
 
-    const goToPrevious = () => {
-        setCurrentImageIndex(prevIndex => (prevIndex - 1 + images.length) % images.length);
-    };
+    const currentSlide = sliderData[currentSlideIndex];
+    const currentMessage = currentSlide 
+        ? { 
+            title: currentSlide.title, 
+            highlight: currentSlide.highlight, 
+            description: currentSlide.description 
+          }
+        : sliderMessages[0];
 
-    const goToNext = () => {
-        setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
-    };
+    const firstSliderImage = sliderData.length > 0 ? sliderData[0].imageUrl : null;
 
     return (
-        <section 
-            className="relative w-full h-[85vh] min-h-[600px] max-h-[900px] overflow-hidden"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-        >
-            {/* Background Images Slideshow */}
-            <AnimatePresence mode="wait">
-                {images.length > 0 ? (
-                    images.map((image, index) => (
-                        currentImageIndex === index && (
+        <div className="w-full">
+            {/* Featured Product Section - E-commerce Style */}
+            {featuredProduct && (
+                <section className="relative py-10 sm:py-14 overflow-hidden">
+                    {/* E-commerce gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+                    
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+                        <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+                        <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/5 rounded-full blur-3xl"></div>
+                    </div>
+                    
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <Link href={`/kategorije/${featuredProduct.categorySlug}/${featuredProduct.slug}`} className="block">
                             <motion.div
-                                key={index}
-                                initial={{ opacity: 0, scale: 1.1 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 1.2, ease: 'easeInOut' }}
-                                className="absolute inset-0"
-                                style={{
-                                    backgroundImage: `url(${image})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
-                            />
-                        )
-                    ))
-                ) : (
-                    // Fallback gradient when no images
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800" />
-                )}
-            </AnimatePresence>
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="cursor-pointer group"
+                            >
+                                <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+                                    {/* Product Image Side */}
+                                    <div className="w-full lg:w-1/2 flex items-center justify-center">
+                                        <div className="relative w-full max-w-lg">
+                                            {/* Glow effect behind image */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-3xl blur-2xl scale-95 group-hover:scale-100 transition-transform duration-500"></div>
+                                            <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10">
+                                                <div className="relative h-[260px] sm:h-[320px] lg:h-[380px]">
+                                                    <Image
+                                                        src={featuredProduct.imageUrl}
+                                                        alt={featuredProduct.name}
+                                                        fill
+                                                        className="object-contain group-hover:scale-105 transition-transform duration-500"
+                                                        priority
+                                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-            {/* Enhanced Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30 z-10" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 z-10" />
-
-            {/* Slide Navigation Arrows */}
-            {images.length > 1 && (
-                <>
-                    <button
-                        onClick={goToPrevious}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110 hidden md:flex items-center justify-center"
-                        aria-label="Prethodna slika"
-                    >
-                        <ChevronLeft className="w-6 h-6 text-white" />
-                    </button>
-                    <button
-                        onClick={goToNext}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110 hidden md:flex items-center justify-center"
-                        aria-label="Sljedeća slika"
-                    >
-                        <ChevronRight className="w-6 h-6 text-white" />
-                    </button>
-                </>
-            )}
-
-            {/* Slide Indicators */}
-            {images.length > 1 && (
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
-                    {images.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => goToSlide(index)}
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                                currentImageIndex === index
-                                    ? 'w-8 bg-white'
-                                    : 'w-2 bg-white/50 hover:bg-white/75'
-                            }`}
-                            aria-label={`Prikaži sliku ${index + 1}`}
-                        />
-                    ))}
-                </div>
-            )}
-
-            {/* Content */}
-            <div className="relative z-20 w-full h-full px-4 sm:px-8 lg:px-16 flex flex-col lg:flex-row justify-center items-center">
-                {/* Left Content (Text and Button Section) */}
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="text-center lg:text-left w-full lg:w-[50%] mb-8 lg:mb-0 flex flex-col justify-center z-20"
-                >
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-2xl">
-                        Potrebna ti je
-                        <span className="block mt-2 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                            LED Rasvjeta?
-                        </span>
-                    </h1>
-
-                    <p className="mt-6 max-w-xl text-white/95 text-lg sm:text-xl leading-relaxed drop-shadow-lg">
-                        Ekskluzivni uvoznik i distributer motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama.
-                    </p>
-
-                    <div className="mt-10 flex flex-wrap gap-4 justify-center lg:justify-start">
-                        <Link 
-                            href="/proizvodi" 
-                            className="group relative inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-xl hover:shadow-2xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
-                        >
-                            <span>Pregledaj proizvode</span>
-                            <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-
-                        <Link 
-                            href="/ledTehnika" 
-                            className="inline-flex items-center justify-center rounded-full bg-white/95 backdrop-blur-sm px-8 py-4 text-base font-semibold text-gray-800 shadow-xl hover:shadow-2xl hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
-                        >
-                            O nama
+                                    {/* Product Info Side */}
+                                    <div className="w-full lg:w-1/2 text-center lg:text-left">
+                                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-bold rounded-full mb-5">
+                                            <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                                            IZDVOJENO
+                                        </div>
+                                        
+                                        <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight mb-4 group-hover:text-primary transition-colors duration-300">
+                                            {featuredProduct.name}
+                                        </h1>
+                                        
+                                        <p className="text-slate-400 text-base lg:text-lg mb-6 leading-relaxed line-clamp-2 max-w-xl mx-auto lg:mx-0">
+                                            {featuredProduct.description?.slice(0, 120)}...
+                                        </p>
+                                        
+                                        <div className="mb-6">
+                                            <span className="text-slate-500 text-sm block mb-1">Cijena</span>
+                                            <span className="text-4xl sm:text-5xl font-bold text-primary">
+                                                {featuredProduct.price?.toFixed(2) || '0.00'} KM
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 group/btn">
+                                            <ShoppingCart className="w-5 h-5" />
+                                            <span>Pogledaj proizvod</span>
+                                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
                         </Link>
                     </div>
-                </motion.div>
+                </section>
+            )}
 
-                {/* Right Content (Product Showcase Component) */}
-                <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    className="relative z-20 w-full lg:w-[50%]"
+            {/* Children content (e.g., Categories) inserted between Izdvojeno and Slider */}
+            {children}
+
+            {/* Simple Slider Section */}
+            {sliderData.length > 0 && (
+                <section 
+                    className="relative w-full h-[60vh] min-h-[400px] max-h-[600px] overflow-hidden"
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
                 >
-                    <ProductShowcase />
-                </motion.div>
-            </div>
-        </section>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentSlideIndex}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute inset-0"
+                        >
+                            <Image
+                                src={currentSlide.imageUrl}
+                                alt={`Slider ${currentSlideIndex + 1}`}
+                                fill
+                                className="object-cover"
+                                priority={currentSlideIndex === 0}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/30" />
+                        </motion.div>
+                    </AnimatePresence>
+
+                    {/* Navigation Arrows */}
+                    {sliderData.length > 1 && (
+                        <>
+                            <button
+                                onClick={goToPrevious}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110 hidden md:flex items-center justify-center"
+                                aria-label="Prethodna slika"
+                            >
+                                <ChevronLeft className="w-6 h-6 text-white" />
+                            </button>
+                            <button
+                                onClick={goToNext}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110 hidden md:flex items-center justify-center"
+                                aria-label="Sljedeća slika"
+                            >
+                                <ChevronRight className="w-6 h-6 text-white" />
+                            </button>
+                        </>
+                    )}
+
+                    {/* Slide Indicators */}
+                    {sliderData.length > 1 && (
+                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                            {sliderData.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => goToSlide(index)}
+                                    className={`h-2 rounded-full transition-all duration-300 ${
+                                        currentSlideIndex === index
+                                            ? 'w-8 bg-white'
+                                            : 'w-2 bg-white/50 hover:bg-white/75'
+                                    }`}
+                                    aria-label={`Prikaži sliku ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Overlay Content - Changes with each slide */}
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentSlideIndex}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.5 }}
+                            className="relative z-20 w-full h-full flex items-center justify-center px-4 sm:px-8"
+                        >
+                            <div className="text-center max-w-3xl">
+                                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-2xl mb-4">
+                                    {currentMessage.title}
+                                    <span className="block mt-2 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                                        {currentMessage.highlight}
+                                    </span>
+                                </h2>
+                                <p className="text-white/95 text-lg sm:text-xl lg:text-2xl mb-8 drop-shadow-lg">
+                                    {currentMessage.description}
+                                </p>
+                                <div className="flex flex-wrap gap-4 justify-center">
+                                    <Link 
+                                        href="/proizvodi" 
+                                        className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-xl hover:shadow-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105"
+                                    >
+                                        <span>Pregledaj proizvode</span>
+                                        <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </Link>
+                                    <Link 
+                                        href="/ledTehnika" 
+                                        className="inline-flex items-center justify-center rounded-full bg-white/95 backdrop-blur-sm px-8 py-4 text-base font-semibold text-gray-800 shadow-xl hover:shadow-2xl hover:bg-white transition-all duration-300 transform hover:scale-105"
+                                    >
+                                        O nama
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </AnimatePresence>
+                </section>
+            )}
+        </div>
     );
 }
 
