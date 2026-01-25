@@ -161,6 +161,19 @@ const ProductDetailPage = ({ product, categoryName, categorySlug }) => {
             </div>
           )}
 
+          {/* Enhanced Description with Keywords */}
+          {!product?.description && (
+            <div className='prose prose-sm sm:prose-base max-w-none text-gray-700 leading-relaxed'>
+              <p>
+                {product?.name} je visokokvalitetan proizvod iz kategorije {categoryName} na Led Tehnika. 
+                {categoryName.toLowerCase().includes('led') && ' Idealna LED rasvjeta za vaš dom ili poslovni prostor.'}
+                {categoryName.toLowerCase().includes('bazensk') && ' Profesionalna bazenska rasvjeta za vaš bazen.'}
+                {categoryName.toLowerCase().includes('motor') && ' Pouzdan motor za kapiju sa dugotrajnom garancijom.'}
+                {' '}Kvalitetni proizvodi po najboljim cijenama u Bosni i Hercegovini. Dostava na teritoriji cijele BiH.
+              </p>
+            </div>
+          )}
+
           {/* Price Section */}
           <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100'>
             <div className='flex items-baseline gap-3'>
@@ -232,6 +245,21 @@ const ProductDetailPage = ({ product, categoryName, categorySlug }) => {
               <span className='font-semibold text-gray-700'>Kategorija:</span> {categoryName}
             </span>
           </div>
+
+          {/* Link to Motori za kapiju guide page */}
+          {product?.slug === 'motor-za-kapiju-set' && (
+            <div className='pt-4 border-t border-gray-200'>
+              <Link 
+                href="/motori-za-kapiju"
+                className='inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors hover:underline'
+              >
+                <span>Više o motorima za kapiju</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 

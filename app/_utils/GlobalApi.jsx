@@ -56,8 +56,20 @@ const getProductsByCategoryName = (categoryName) =>
 
 const getCategoryByName = async (categoryName) => {
   try {
-    const res = await axiosClient.get(`/kategorije?filters[name][$eq]=${encodeURIComponent(categoryName)}&populate=*`);
+    const res = await axiosClient.get(`/kategorije?filters[name][$eqi]=${encodeURIComponent(categoryName)}&populate=*`);
     return res.data.data?.[0] || null;
+  } catch (error) {
+    return null;
+  }
+};
+
+const getStranicaBySlug = async (slug) => {
+  try {
+    const res = await axiosClient.get(
+      `/stranices?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=cover`,
+      { cache: 'no-store' }
+    );
+    return res.data?.data?.[0] || null;
   } catch (error) {
     return null;
   }
@@ -77,6 +89,7 @@ export default {
     getProductsByCategory,
     getProductsByCategoryName,
     getCategoryByName,
+    getStranicaBySlug,
     addToCart,
     getProductById,
     getProductBySlug

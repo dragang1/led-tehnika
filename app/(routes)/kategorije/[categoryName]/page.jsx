@@ -4,13 +4,15 @@ import TopCategoryList from '../_components/TopCategoryList'
 import Script from 'next/script'
 import { generateCategoryBreadcrumbSchema } from '@/lib/generateSchemas'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
+import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export async function generateMetadata({ params }) {
   const { categoryName } = await params
   const baseDomain = 'https://ledtehnika.com'
 
   try {
-    // Get all categories and find the one matching the slug
+    // Legacy categories - use existing logic
     const categoryList = await GlobalApi.getCategoryList()
     const category = categoryList.find(cat => {
       const catSlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : ''
@@ -29,7 +31,6 @@ export async function generateMetadata({ params }) {
 
     // Use the actual category name from database
     const categoryTitle = category.name
-    const products = await GlobalApi.getProductsByCategoryName(categoryTitle)
 
     const categoryDescription = category.description 
       ? category.description.slice(0, 155).replace(/\n/g, ' ').trim()
@@ -98,12 +99,17 @@ export async function generateStaticParams() {
 export default async function Page({ params }) {
   const { categoryName } = await params
   
+  // Redirect old /kategorije/motori-za-kapiju to new /motori-za-kapiju
+  if (categoryName === 'motori-za-kapiju') {
+    redirect('/motori-za-kapiju', 308)
+  }
+  
   let products = []
   let categoryList = []
   let actualCategory = null
   
   try {
-    // Get all categories and find the one matching the slug
+    // Legacy: Get all categories and find the one matching the slug
     categoryList = await GlobalApi.getCategoryList()
     actualCategory = categoryList.find(cat => {
       const catSlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : ''
@@ -143,7 +149,7 @@ export default async function Page({ params }) {
   )
 
   const breadcrumbItems = [
-    { label: categoryTitle, href: `#` }
+    { label: categoryTitle, href: `/kategorije/${categorySlug}` }
   ];
 
   return (
@@ -158,6 +164,25 @@ export default async function Page({ params }) {
         <h1 className='text-primary font-bold text-2xl mt-5 text-center'>
           {categoryTitle}
         </h1>
+        
+        {/* Callout for Motori za kapiju on Automatizacija page */}
+        {categoryName === 'automatizacija' && (
+          <div className='mt-6 mb-8 p-6 bg-blue-50 border border-blue-200 rounded-lg'>
+            <h2 className='text-xl font-bold text-gray-900 mb-2'>Motori za kapiju</h2>
+            <p className='text-gray-700 mb-4'>
+              Vodič za izbor motora i opreme (daljinski, signalna lampa, letva, fotoćelije).
+            </p>
+            <Link
+              href="/motori-za-kapiju"
+              className='inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md transition-colors'
+            >
+              Više o motorima za kapiju
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        )}
         
         <TopCategoryList 
           categoryList={categoryList} 

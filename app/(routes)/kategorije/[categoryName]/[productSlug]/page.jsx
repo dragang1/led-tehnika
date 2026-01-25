@@ -1,7 +1,7 @@
 import ProductDetailPage from '../../_components/ProductDetailPage';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import Script from 'next/script';
-import { generateProductSchema, generateBreadcrumbSchema } from '@/lib/generateSchemas';
+import { generateProductSchema, generateBreadcrumbSchema, generateFAQSchema, generateReviewSchema } from '@/lib/generateSchemas';
 
 export async function generateMetadata({ params }) {
   const { productSlug } = await params;
@@ -46,18 +46,43 @@ export async function generateMetadata({ params }) {
       description = `${description} Cijena: ${price}.`;
     }
 
+    // Extract model number for title enhancement
+    const extractModelNumber = (name) => {
+      if (!name) return null;
+      const patterns = [
+        /(?:model|model:|kod|code|artikl|art\.?)[\s:]*([A-Z]{1,3}[- ]?[A-Z0-9]{1,6})/i,
+        /\b([A-Z]{1,3}[- ]?[P]?\d{2,4}[A-Z]?)\b/,
+        /\(([A-Z]{1,3}[- ]?[A-Z0-9]{1,6})\)/,
+      ];
+      for (const pattern of patterns) {
+        const match = name.match(pattern);
+        if (match && match[1]) {
+          return match[1].replace(/\s+/g, '-').toUpperCase();
+        }
+      }
+      return null;
+    };
+
+    const modelNumber = product.modelNumber || product.code || product.mpn || extractModelNumber(productName);
+    
+    // Enhanced title with model number and category
     let seoTitle = productName;
+    if (modelNumber && !productName.includes(modelNumber)) {
+      // Add model number if not already in name
+      seoTitle = `${productName} (Model: ${modelNumber})`;
+    }
+    
     if (
       lowerName.includes('motor') ||
       lowerName.includes('kapij') ||
       lowerCategory.includes('motor') ||
       lowerCategory.includes('kapij')
     ) {
-      seoTitle = `${productName} - Motor za kapiju | Led Tehnika`;
+      seoTitle = `${seoTitle} - Motor za kapiju | Led Tehnika`;
     } else if (categoryNameDisplay) {
-      seoTitle = `${productName} - ${categoryNameDisplay} | Led Tehnika`;
+      seoTitle = `${seoTitle} - ${categoryNameDisplay} | Led Tehnika`;
     } else {
-      seoTitle = `${productName} | Led Tehnika`;
+      seoTitle = `${seoTitle} | Led Tehnika`;
     }
 
     return {
@@ -131,6 +156,18 @@ export default async function Page({ params }) {
     baseDomain
   );
 
+  // Generate FAQ schema if product has FAQs (can be added to product data later)
+  const productFAQs = product.faqs || product.frequentlyAskedQuestions || [];
+  const faqSchema = productFAQs.length > 0 ? generateFAQSchema(productFAQs, baseDomain) : null;
+
+  // Generate Review schema if product has reviews (can be added to product data later)
+  const productReviews = product.reviews || [];
+  const aggregateRating = product.aggregateRating || (productReviews.length > 0 ? {
+    ratingValue: product.averageRating || "5",
+    reviewCount: productReviews.length
+  } : null);
+  const reviewSchema = productReviews.length > 0 ? generateReviewSchema(productReviews, aggregateRating) : null;
+
   return (
     <>
       <Script
@@ -143,6 +180,20 @@ export default async function Page({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {faqSchema && (
+        <Script
+          id="faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      {reviewSchema && (
+        <Script
+          id="review-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
+        />
+      )}
       <ProductDetailPage
         product={product}
         categoryName={categoryNameDisplay}

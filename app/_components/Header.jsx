@@ -63,6 +63,9 @@ function Header() {
                     <Link href="/proizvodi" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
                         Artikli
                     </Link>
+                    <Link href="/blog" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
+                        Blog
+                    </Link>
                     <Link href="/kontakt" className="text-gray-700 hover:text-primary transition-colors font-medium text-[15px]">
                         Kontakt
                     </Link>
@@ -237,6 +240,21 @@ function Header() {
               className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
             >
               Artikli
+            </Link>
+          </motion.div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 },
+            }}
+          >
+            <Link
+              href="/blog"
+              onClick={toggleMenu}
+              className="block py-2 px-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            >
+              Blog
             </Link>
           </motion.div>
 

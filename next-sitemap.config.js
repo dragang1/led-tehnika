@@ -13,6 +13,14 @@ export default {
     const products = await getProductsForSitemap();
     const categories = await getCategoriesForSitemap();
 
+    // Blog posts
+    const blogPosts = [
+      'kako-odabrati-motor-za-kapiju',
+      'vodic-za-led-rasvjetu-u-vrtu',
+      'instalacija-bazenske-rasvjete',
+      'prednosti-led-rasvjete',
+    ];
+
     const paths = [
       // Homepage with highest priority
       {
@@ -21,6 +29,20 @@ export default {
         changefreq: 'daily',
         priority: 1.0,
       },
+      // Blog main page
+      {
+        loc: '/blog',
+        lastmod: new Date().toISOString(),
+        changefreq: 'weekly',
+        priority: 0.8,
+      },
+      // Blog posts
+      ...blogPosts.map(slug => ({
+        loc: `/blog/${slug}`,
+        lastmod: new Date().toISOString(),
+        changefreq: 'monthly',
+        priority: 0.7,
+      })),
       // Category pages
       ...categories.map(category => ({
         loc: `/kategorije/${category.slug}`,
