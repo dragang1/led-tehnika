@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { toast } from "sonner";
 import { useCart } from '../../../_components/CartContext';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
+import ProductDescription from '@/app/_components/ProductDescription';
 import { motion } from 'framer-motion';
 import GlobalApi from '@/app/_utils/GlobalApi';
 
@@ -130,9 +130,9 @@ const ProductDetailPage = ({ product }) => {
       ))}
     </div>
    
-    <ReactMarkdown className='prose prose-sm sm:prose-base text-gray-600 max-w-full text-center md:text-left'>
-      {product?.description}
-    </ReactMarkdown>
+    <div className='max-w-full text-center md:text-left'>
+      <ProductDescription description={product?.description} />
+    </div>
       <div className="flex items-center gap-2">
       <CheckCircle2 className="text-green-500 w-5 h-5 sm:w-6 sm:h-6" />
       <span className="text-green-600 font-semibold text-base sm:text-lg">Na stanju</span>

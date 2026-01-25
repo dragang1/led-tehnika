@@ -7,10 +7,10 @@ import Image from 'next/image';
 import { toast } from "sonner";
 import { useCart } from '@/app/_components/CartContext';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
+import ProductDescription from '@/app/_components/ProductDescription';
 
 const ProductDetailPage = ({ product, categoryName, categorySlug }) => {
   const [quantity, setQuantity] = useState(1);
@@ -156,9 +156,7 @@ const ProductDetailPage = ({ product, categoryName, categorySlug }) => {
 
           {/* Product Description */}
           {product?.description && (
-            <div className='prose prose-sm sm:prose-base max-w-none text-gray-700 leading-relaxed'>
-              <ReactMarkdown>{product.description}</ReactMarkdown>
-            </div>
+            <ProductDescription description={product.description} />
           )}
 
           {/* Enhanced Description with Keywords */}
