@@ -3,6 +3,8 @@ import GlobalApi from '@/app/_utils/GlobalApi';
 import Script from 'next/script';
 import { generateProductSchema, generateBreadcrumbSchema, generateFAQSchema, generateReviewSchema } from '@/lib/generateSchemas';
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+
 export async function generateMetadata({ params }) {
   const { productSlug } = await params;
 

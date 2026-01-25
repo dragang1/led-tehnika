@@ -3,6 +3,8 @@ import React from 'react';
 import ProductList from '../../_components/ProductList';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+
 export const metadata = {
   title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
   description: 'Pregled svih proizvoda na Led Tehnika. Motor za kapiju, LED rasvjeta, bazenska rasvjeta, kaloliferi i grijanje. Kvalitetni proizvodi po najboljim cijenama u Bosni.',

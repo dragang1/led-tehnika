@@ -1,6 +1,8 @@
 import GlobalApi from './_utils/GlobalApi';
 import HomeContent from './_components/HomeContent';
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+
 export const metadata = {
   title: 'Motori za kapije, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
   description: 'Led Tehnika - ekskluzivni uvoznik motora za kapije, LED rasvjete, bazenske rasvjete, kalolifera i grijanja. Kvalitetni proizvodi po najboljim cijenama u Bosni.',

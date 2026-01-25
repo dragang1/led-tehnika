@@ -1,6 +1,8 @@
 import GlobalApi from '@/app/_utils/GlobalApi';
 import { redirect } from 'next/navigation';
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
 

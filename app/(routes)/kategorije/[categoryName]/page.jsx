@@ -7,6 +7,8 @@ import Breadcrumbs from '@/app/_components/Breadcrumbs'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+
 export async function generateMetadata({ params }) {
   const { categoryName } = await params
   const baseDomain = 'https://ledtehnika.com'
