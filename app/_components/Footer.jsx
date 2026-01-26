@@ -85,13 +85,16 @@ function Footer() {
                         
                         {/* Company Info */}
                         <div className="sm:col-span-2 lg:col-span-1">
-                            <Image 
-                                src="/logo-black.png" 
-                                width={140} 
-                                height={45} 
-                                alt="LED Tehnika logo"
-                                className="brightness-0 invert mb-5"
-                            />
+                            <div className="relative w-[140px] h-[45px] mb-5">
+                                <Image 
+                                    src="/logo-black.png" 
+                                    fill
+                                    alt="LED Tehnika logo"
+                                    className="brightness-0 invert"
+                                    sizes="140px"
+                                    priority
+                                />
+                            </div>
                             <p className="text-slate-300 text-sm leading-relaxed mb-5 max-w-sm">
                                 Ekskluzivni uvoznik motora za kapije, LED rasvjete i bazenske opreme u Bosni i Hercegovini.
                             </p>

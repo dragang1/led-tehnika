@@ -16,8 +16,8 @@ export default function HomeContent({ categoryList, productList }) {
         <section className="bg-white py-10 md:py-14">
           <motion.div
             className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
             <div className="text-center mb-8">

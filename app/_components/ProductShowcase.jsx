@@ -127,14 +127,15 @@ const ProductShowcase = () => {
   transition={{ duration: 0.6, ease: 'easeInOut' }}
   className="flex flex-col items-center text-center min-h-[380px] sm:min-h-[420px] justify-center cursor-pointer transition-opacity duration-500"
 >
-  <div className="w-[220px] h-[200px] sm:w-[320px] sm:h-[260px] rounded-xl bg-gray-50 shadow-md overflow-hidden mb-4 flex items-center justify-center">
+  <div className="w-[220px] h-[200px] sm:w-[320px] sm:h-[260px] rounded-xl bg-gray-50 shadow-md overflow-hidden mb-4 flex items-center justify-center relative">
     {imageUrl ? (
       <Image
         src={imageUrl}
         alt={productName}
-        width={320}
-        height={260}
-        className="object-contain w-full h-full p-2"
+        fill
+        className="object-contain p-2"
+        sizes="(max-width: 640px) 220px, 320px"
+        quality={75}
       />
     ) : (
       <div className="text-red-500">Nema slike</div>

@@ -18,10 +18,18 @@ function Slider({ sliderList }) {
             <CarouselContent>
                 {sliderList.map((slider, index) => (
                     <CarouselItem key={index}>
-                       
-                        <Image src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + slider?.image[0]?.url} width={1000} height={400} alt="slider" className='w-full h-[200px] md:h-[400px] object-cover rounded-2xl' />
-
-
+                        <div className="relative w-full h-[200px] md:h-[400px]">
+                            <Image 
+                                src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + slider?.image[0]?.url} 
+                                fill
+                                alt="slider" 
+                                className='object-cover rounded-2xl'
+                                sizes="100vw"
+                                quality={80}
+                                priority={index === 0}
+                                fetchPriority={index === 0 ? "high" : "auto"}
+                            />
+                        </div>
                     </CarouselItem>
 
                 ))}

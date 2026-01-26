@@ -82,6 +82,8 @@ function ProductItem({ product }) {
               alt={name}
               fill
               className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+              quality={75}
               onError={() => setImageError(true)}
             />
           ) : (
@@ -125,6 +127,8 @@ function ProductItem({ product }) {
               alt={name}
               fill
               className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+              sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+              quality={75}
               onError={() => setImageError(true)}
             />
           ) : (

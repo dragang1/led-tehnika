@@ -26,7 +26,6 @@ function CategoryList({ categoryList }) {
 
   return (
     <div>
-      <h2 className='text-primary font-bold text-2xl mt-5 mb-4'>Pretraži po kategoriji</h2>
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mt-2 sm:p-2'>
         {categoryList.map((cat, index) => {
           const imageUrl = getImageUrl(cat?.icon?.url);
@@ -47,6 +46,9 @@ function CategoryList({ categoryList }) {
                     fill
                     alt={cat?.name || 'category icon'}
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                    quality={75}
+                    loading={index < 5 ? "eager" : "lazy"}
                     onError={(e) => {
                       e.target.style.display = 'none';
                     }}

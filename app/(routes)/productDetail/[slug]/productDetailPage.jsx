@@ -102,6 +102,8 @@ const ProductDetailPage = ({ product }) => {
           alt={product?.image?.[0]?.alternativeText || 'product image'}
           fill
           className='object-contain transition-transform duration-300 ease-in-out hover:scale-105'
+          sizes="(max-width: 768px) 100vw, 50vw"
+          quality={80}
           priority
         />
       </div>
@@ -125,6 +127,8 @@ const ProductDetailPage = ({ product }) => {
           className={`h-[70px] w-[70px] object-cover cursor-pointer rounded-md transition-all
             ${selectedImage === image?.url ? 'ring-2 ring-blue-600 ring-offset-2' : 'ring-0'}
             hover:ring-2 hover:ring-blue-400 hover:ring-offset-2`}
+          sizes="70px"
+          quality={70}
           onClick={() => setSelectedImage(image?.url)}
         />
       ))}
@@ -214,6 +218,8 @@ const ProductDetailPage = ({ product }) => {
                                             alt={item.image?.[0]?.alternativeText || 'related product image'}
                                             fill
                                             className="object-contain"
+                                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                            quality={75}
                                         />
                                     </div>
                                     <div className="flex flex-col justify-between p-4 flex-grow">

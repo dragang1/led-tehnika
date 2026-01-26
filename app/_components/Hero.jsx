@@ -168,6 +168,7 @@ function Hero({ children }) {
                                                         fill
                                                         className="object-contain group-hover:scale-105 transition-transform duration-500"
                                                         priority
+                                                        fetchPriority="high"
                                                         sizes="(max-width: 768px) 100vw, 50vw"
                                                     />
                                                 </div>
@@ -234,7 +235,10 @@ function Hero({ children }) {
                                 alt={`Slider ${currentSlideIndex + 1}`}
                                 fill
                                 className="object-cover"
+                                sizes="100vw"
+                                quality={80}
                                 priority={currentSlideIndex === 0}
+                                fetchPriority={currentSlideIndex === 0 ? "high" : "auto"}
                             />
                             <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/30" />
                         </motion.div>
