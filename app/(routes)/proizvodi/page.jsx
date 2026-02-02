@@ -1,7 +1,9 @@
 import GlobalApi from '@/app/_utils/GlobalApi';
 import React from 'react';
+import Script from 'next/script';
 import ProductList from '../../_components/ProductList';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
+import { generateItemListSchema } from '@/lib/generateSchemas';
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
 
@@ -46,8 +48,19 @@ async function AllProductsPage() {
         { label: 'Svi artikli', href: '#' }
     ];
 
+    const itemListSchema = generateItemListSchema(products, 'https://ledtehnika.com', 50);
+
     return (
         <>
+            {itemListSchema && (
+                <Script
+                    id="itemlist-schema"
+                    type="application/ld+json"
+                    strategy="beforeInteractive"
+                >
+                    {JSON.stringify(itemListSchema)}
+                </Script>
+            )}
             <Breadcrumbs items={breadcrumbItems} />
             <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>
                 <h1 className='text-primary font-bold text-2xl mt-5 text-center'>Svi artikli</h1>

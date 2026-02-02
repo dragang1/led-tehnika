@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Script from 'next/script';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
+import { generateBlogPostingSchema } from '@/lib/generateSchemas';
 import { notFound } from 'next/navigation';
 
 // Blog posts content - can be moved to CMS/API later
@@ -210,8 +212,17 @@ export default function BlogPostPage({ params }) {
     { label: post.title, href: '#' }
   ];
 
+  const blogPostingSchema = generateBlogPostingSchema(post, slug, 'https://ledtehnika.com');
+
   return (
     <>
+      <Script
+        id="blog-posting-schema"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+      >
+        {JSON.stringify(blogPostingSchema)}
+      </Script>
       <Breadcrumbs items={breadcrumbItems} />
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 sm:p-12">
@@ -251,6 +262,19 @@ export default function BlogPostPage({ params }) {
                 return <p key={index} className="text-gray-700 leading-relaxed mb-4">{line}</p>;
               }
             })}
+            {slug === 'kako-odabrati-motor-za-kapiju' && (
+              <p className="text-gray-700 leading-relaxed mb-4 mt-6">
+                Pogledajte naš{' '}
+                <Link href="/kategorije/automatizacija/motor-za-kapiju-set" className="text-blue-600 hover:text-blue-700 font-medium underline">
+                  komplet za motor za kapiju Smart Panther 600
+                </Link>
+                {' '}te stranicu{' '}
+                <Link href="/motori-za-kapiju" className="text-blue-600 hover:text-blue-700 font-medium underline">
+                  Motori za kapiju
+                </Link>
+                {' '}za više informacija i ponudu.
+              </p>
+            )}
           </div>
 
           <div className="mt-12 pt-8 border-t border-gray-200">

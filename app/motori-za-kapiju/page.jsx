@@ -1,7 +1,11 @@
 import GlobalApi from '@/app/_utils/GlobalApi'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import ProductItem from '@/app/_components/ProductItem'
+import Breadcrumbs from '@/app/_components/Breadcrumbs'
+
+const BASE_DOMAIN = 'https://ledtehnika.com'
 
 export async function generateMetadata() {
   const baseDomain = 'https://ledtehnika.com'
@@ -1003,8 +1007,26 @@ export default async function Page() {
         : `https://led-backend-62tj.onrender.com${stranica.cover.url}`)
     : null
 
+  const pageTitle = stranica?.title || 'Motori za kapiju'
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Početna', item: BASE_DOMAIN },
+      { '@type': 'ListItem', position: 2, name: pageTitle, item: `${BASE_DOMAIN}/motori-za-kapiju` },
+    ],
+  }
+  const breadcrumbItems = [{ label: pageTitle, href: '#' }]
+
   return (
-    <div className='px-4 md:px-8 lg:px-16 max-w-5xl mx-auto py-10'>
+    <>
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
+      <div className='px-4 md:px-8 lg:px-16 max-w-5xl mx-auto py-10'>
       {/* Hero Section */}
       <div className='text-center mb-12'>
         <h1 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
@@ -1094,5 +1116,6 @@ export default async function Page() {
         </Link>
       </div>
     </div>
+    </>
   )
 }

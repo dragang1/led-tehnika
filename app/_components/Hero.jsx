@@ -6,9 +6,9 @@ import GlobalApi from '../_utils/GlobalApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingCart, ArrowRight } from 'lucide-react';
 
-function Hero({ children }) {
-    const [featuredProduct, setFeaturedProduct] = useState(null);
-    const [sliderData, setSliderData] = useState([]);
+function Hero({ children, initialFeaturedProduct = null, initialSliderData = [] }) {
+    const [featuredProduct, setFeaturedProduct] = useState(initialFeaturedProduct);
+    const [sliderData, setSliderData] = useState(initialSliderData);
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
 
@@ -41,71 +41,44 @@ function Hero({ children }) {
         }
     ];
 
+    // Only fetch client-side when no initial data (e.g. direct nav to page without server data)
     useEffect(() => {
+        if (initialFeaturedProduct != null && initialSliderData?.length > 0) return;
         const fetchData = async () => {
             try {
-                // Fetch featured product
-                const product = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
-                if (product) {
-                    const category = product.kategorije || {};
-                    const categorySlug = category.name ? category.name.toLowerCase().replace(/\s+/g, '-') : 'automatizacija';
-                    const productImage = product.image?.[0]?.url;
-                    let imageUrl = null;
-                    
-                    if (productImage) {
-                        if (productImage.startsWith('http')) {
-                            imageUrl = productImage;
-                        } else if (productImage.startsWith('/uploads/') || productImage.startsWith('/api/')) {
-                            imageUrl = `https://led-backend-62tj.onrender.com${productImage}`;
-                        } else {
-                            imageUrl = productImage.startsWith('/') 
-                                ? `https://ledtehnika.com${productImage}`
-                                : `https://ledtehnika.com/${productImage}`;
-                        }
-                    }
-
-                    if (imageUrl) {
-                        setFeaturedProduct({
-                            ...product,
-                            categorySlug,
-                            imageUrl
-                        });
+                if (initialFeaturedProduct == null) {
+                    const product = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
+                    if (product?.image?.[0]?.url) {
+                        const category = product.kategorije || {};
+                        const categorySlug = category.name ? category.name.toLowerCase().replace(/\s+/g, '-') : 'automatizacija';
+                        const productImage = product.image[0].url;
+                        let imageUrl = productImage.startsWith('http') ? productImage
+                            : (productImage.startsWith('/uploads/') || productImage.startsWith('/api/'))
+                                ? `https://led-backend-62tj.onrender.com${productImage}`
+                                : productImage.startsWith('/') ? `https://ledtehnika.com${productImage}` : `https://ledtehnika.com/${productImage}`;
+                        setFeaturedProduct({ ...product, categorySlug, imageUrl });
                     }
                 }
-
-                // Fetch slider images
-                const response = await GlobalApi.getSliders();
-                if (response && Array.isArray(response) && response.length > 0) {
-                    const sliders = response[0]?.sliders || [];
-                    const sliderItems = sliders
-                        .map((slider, index) => {
-                            const url = slider?.url?.replace(/^\//, '');
-                            if (!url) return null;
-                            let imageUrl = null;
-                            if (url.startsWith('http')) {
-                                imageUrl = url;
-                            } else if (url.startsWith('/uploads/') || url.startsWith('/api/')) {
-                                imageUrl = `https://led-backend-62tj.onrender.com${url}`;
-                            } else {
-                                imageUrl = url.startsWith('/') ? `https://ledtehnika.com${url}` : `https://ledtehnika.com/${url}`;
-                            }
-                            return {
-                                imageUrl,
-                                title: slider?.title || sliderMessages[index % sliderMessages.length].title,
-                                description: slider?.description || sliderMessages[index % sliderMessages.length].description,
-                                highlight: sliderMessages[index % sliderMessages.length].highlight
-                            };
-                        })
-                        .filter(Boolean);
-                    setSliderData(sliderItems);
+                if (!initialSliderData?.length) {
+                    const response = await GlobalApi.getSliders();
+                    if (response?.[0]?.sliders) {
+                        const sliderItems = response[0].sliders
+                            .map((slider, index) => {
+                                const url = slider?.url?.replace(/^\//, '');
+                                if (!url) return null;
+                                const imageUrl = url.startsWith('http') ? url : (url.startsWith('/uploads/') || url.startsWith('/api/')) ? `https://led-backend-62tj.onrender.com${url}` : url.startsWith('/') ? `https://ledtehnika.com${url}` : `https://ledtehnika.com/${url}`;
+                                return { imageUrl, title: slider?.title || sliderMessages[index % sliderMessages.length].title, description: slider?.description || sliderMessages[index % sliderMessages.length].description, highlight: sliderMessages[index % sliderMessages.length].highlight };
+                            })
+                            .filter(Boolean);
+                        setSliderData(sliderItems);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching hero data:', error);
             }
         };
-
         fetchData();
-    }, []);
+    }, [initialFeaturedProduct, initialSliderData]);
 
     // Auto-slide effect
     useEffect(() => {
@@ -135,12 +108,12 @@ function Hero({ children }) {
         <div className="w-full">
             {/* Featured Product Section - E-commerce Style */}
             {featuredProduct && (
-                <section className="relative py-10 sm:py-14 overflow-hidden">
+                <section className="relative py-10 sm:py-14 overflow-hidden min-h-[320px] sm:min-h-[400px]" aria-hidden="false">
                     {/* E-commerce gradient background */}
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
                     
                     {/* Decorative elements */}
-                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                         <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
                         <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-400/5 rounded-full blur-3xl"></div>
@@ -148,12 +121,7 @@ function Hero({ children }) {
                     
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <Link href={`/kategorije/${featuredProduct.categorySlug}/${featuredProduct.slug}`} className="block">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                className="cursor-pointer group"
-                            >
+                            <div className="cursor-pointer group">
                                 <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
                                     {/* Product Image Side */}
                                     <div className="w-full lg:w-1/2 flex items-center justify-center">
@@ -200,12 +168,12 @@ function Hero({ children }) {
                                         
                                         <div className="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 group/btn">
                                             <ShoppingCart className="w-5 h-5" />
-                                            <span>Pogledaj proizvod</span>
+                                            <span>{featuredProduct.name}</span>
                                             <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </div>
                         </Link>
                     </div>
                 </section>

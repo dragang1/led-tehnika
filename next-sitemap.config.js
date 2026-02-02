@@ -3,6 +3,7 @@ import { getCategoriesForSitemap } from './getCategoriesForSitemap.js';
 
 
 export default {
+  // Must match canonical domain (no www) - used for all sitemap URLs
   siteUrl: 'https://ledtehnika.com',
   generateRobotsTxt: true,
   sitemapSize: 5000,
@@ -35,6 +36,13 @@ export default {
         lastmod: new Date().toISOString(),
         changefreq: 'weekly',
         priority: 0.8,
+      },
+      // Motori za kapiju landing page
+      {
+        loc: '/motori-za-kapiju',
+        lastmod: new Date().toISOString(),
+        changefreq: 'weekly',
+        priority: 0.9,
       },
       // Blog posts
       ...blogPosts.map(slug => ({

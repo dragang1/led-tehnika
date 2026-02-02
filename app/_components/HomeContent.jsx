@@ -7,11 +7,11 @@ import ProductList from './ProductList';
 import ProductShowcase from './ProductShowcase';
 import Hero from './Hero';
 
-export default function HomeContent({ categoryList, productList }) {
+export default function HomeContent({ categoryList, productList, initialFeaturedProduct, initialSliderData }) {
   return (
     <>
       {/* Hero Section with Categories between Izdvojeno and Slider */}
-      <Hero>
+      <Hero initialFeaturedProduct={initialFeaturedProduct} initialSliderData={initialSliderData}>
         {/* Categories Section - Between Izdvojeno and Slider */}
         <section className="bg-white py-10 md:py-14">
           <motion.div
@@ -37,8 +37,8 @@ export default function HomeContent({ categoryList, productList }) {
       <section className="bg-slate-50 py-12 md:py-16">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
