@@ -186,7 +186,7 @@ function Header() {
           {/* Categories Section */}
           <div className="mb-2">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-1">Kategorije</p>
-            {categoryList?.slice(0, 5).map((cat, index) => {
+            {categoryList?.map((cat, index) => {
               const categorySlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : '';
               return (
                 <motion.div
