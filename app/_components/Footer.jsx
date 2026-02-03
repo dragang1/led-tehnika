@@ -71,6 +71,49 @@ function Footer() {
                 </div>
             </section>
 
+            {/* Pre-footer za SEO – linkovi i kratki tekst točno prije footera */}
+            <section className="bg-white border-t border-gray-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+                        {/* Internal linkovi – kategorije i stranice */}
+                        <div>
+                            <h2 className="text-gray-900 font-semibold text-lg mb-4">
+                                Led Tehnika – motori za kapiju, LED i bazenska rasvjeta
+                            </h2>
+                            <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm" aria-label="Kategorije i stranice">
+                                <Link href="/motori-za-kapiju" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Motori za kapiju
+                                </Link>
+                                <Link href="/kategorije/automatizacija" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Automatizacija
+                                </Link>
+                                <Link href="/kategorije/bazenska-rasvjeta" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Bazenska rasvjeta
+                                </Link>
+                                <Link href="/kategorije/home-dekor" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Home dekor
+                                </Link>
+                                <Link href="/proizvodi" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Svi proizvodi
+                                </Link>
+                                <Link href="/kontakt" className="text-gray-600 hover:text-blue-600 transition-colors">
+                                    Kontakt
+                                </Link>
+                            </nav>
+                        </div>
+                        {/* Kratki SEO tekst */}
+                        <div className="text-gray-600 text-sm leading-relaxed">
+                            <p className="mb-3">
+                                Led Tehnika je ekskluzivni uvoznik motora za kapije, LED rasvjete i bazenske opreme u Bosni i Hercegovini. Nudimo motore za klizne i krilne kapije, LED rasvjetu i prateću opremu za automatizaciju, uz garanciju i dostavu na teritoriji cijele BiH.
+                            </p>
+                            <p>
+                                Dostava: Gradiška, Banja Luka, Laktaši, Doboj, Brcko, Prnjavor, Prijedor i ostala mjesta u BiH. Za savjet i narudžbu kontaktirajte nas putem telefona ili kontakt forme.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Footer */}
             <footer className="relative bg-slate-900 overflow-hidden">
                 {/* Decorative Background Elements */}

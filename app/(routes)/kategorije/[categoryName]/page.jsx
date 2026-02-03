@@ -4,7 +4,6 @@ import TopCategoryList from '../_components/TopCategoryList'
 import Script from 'next/script'
 import { generateCategoryBreadcrumbSchema } from '@/lib/generateSchemas'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
@@ -100,11 +99,6 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }) {
   const { categoryName } = await params
-  
-  // Redirect old /kategorije/motori-za-kapiju to new /motori-za-kapiju
-  if (categoryName === 'motori-za-kapiju') {
-    redirect('/motori-za-kapiju', 308)
-  }
   
   let products = []
   let categoryList = []
