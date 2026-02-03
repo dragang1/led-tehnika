@@ -210,13 +210,22 @@ function Footer() {
                             <p className="text-slate-300 text-sm text-center sm:text-left">
                                 &copy; {currentYear} <span className="text-white font-medium">LED Tehnika</span> · Sva prava zadržana
                             </p>
-                            <div className="flex items-center gap-5 text-sm">
-                                <Link href="/kontakt" className="text-slate-300 hover:text-white transition-colors">
-                                    Kontakt
+                            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-5 text-sm">
+                               
+                                <Link href="/politika-privatnosti" className="text-slate-300 hover:text-white transition-colors">
+                                    Politika privatnosti
                                 </Link>
-                                <Link href="/ledTehnika" className="text-slate-300 hover:text-white transition-colors">
-                                    O nama
-                                </Link>
+                                <span className="text-slate-400 text-xs">
+                                    Design by{' '}
+                                    <a
+                                        href="https://www.novawebstudio.co/"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-slate-300 hover:text-white transition-colors underline"
+                                    >
+                                        Nova Web Studio
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>
