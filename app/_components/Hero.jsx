@@ -166,10 +166,10 @@ function Hero({ children, initialFeaturedProduct = null, initialSliderData = [] 
                                             </span>
                                         </div>
                                         
-                                        <div className="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-7 py-3.5 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 group/btn">
-                                            <ShoppingCart className="w-5 h-5" />
-                                            <span>{featuredProduct.name}</span>
-                                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                                        <div className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white w-full sm:w-auto px-4 py-2.5 sm:px-6 sm:py-3 lg:px-7 lg:py-3.5 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 shadow-lg shadow-blue-500/25 group/btn">
+                                            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                                            <span className="line-clamp-2 text-left sm:text-center">{featuredProduct.name}</span>
+                                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 group-hover/btn:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </div>
