@@ -16,7 +16,7 @@ export async function generateMetadata() {
     if (!stranica) {
       return {
         title: 'Motori za kapiju | Led Tehnika',
-        description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija.',
+        description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
         alternates: {
           canonical: `${baseDomain}/motori-za-kapiju`,
         },
@@ -47,11 +47,13 @@ export async function generateMetadata() {
 
     const title = stranica.seoTitle || `${stranica.title} | Led Tehnika`
     const contentText = extractPlainText(stranica.content || stranica.description);
-    const description = stranica.seoDescription || (
+    const baseDesc = stranica.seoDescription || (
       contentText 
-        ? contentText.slice(0, 160).replace(/\n/g, ' ').trim()
+        ? contentText.slice(0, 120).replace(/\n/g, ' ').trim()
         : `${stranica.title} - Kvalitetni proizvodi na Led Tehnika.`
-    )
+    );
+    const locationSuffix = ' Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor, BiH.';
+    const description = baseDesc.length + locationSuffix.length <= 160 ? baseDesc + locationSuffix : baseDesc.slice(0, 160 - locationSuffix.length).trim() + locationSuffix;
 
     const imageUrl = stranica.cover?.url 
       ? (stranica.cover.url.startsWith('http') 
@@ -89,7 +91,7 @@ export async function generateMetadata() {
   } catch (e) {
     return {
       title: 'Motori za kapiju | Led Tehnika',
-      description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija.',
+      description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
       alternates: {
         canonical: `${baseDomain}/motori-za-kapiju`,
       },
@@ -1034,6 +1036,9 @@ export default async function Page() {
         </h1>
         <p className='text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed'>
           {subtitle}
+        </p>
+        <p className='text-base text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed'>
+          Dostava i ugradnja motora za kapiju u Gradišci, Banjaluci, Laktašima, Srbcu, Prnjavoru, Prijedoru i cijeloj Bosni i Hercegovini.
         </p>
         
         {/* CTA Button */}

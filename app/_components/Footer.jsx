@@ -22,7 +22,7 @@ function Footer() {
                             </div>
                             <div>
                                 <h4 className="text-gray-800 font-semibold text-xs sm:text-sm group-hover:text-blue-600 transition-colors">Brza dostava</h4>
-                                <p className="text-gray-500 text-[10px] sm:text-xs mt-0.5">Po cijeloj BiH</p>
+                                <p className="text-gray-500 text-[10px] sm:text-xs mt-0.5">Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor, BiH</p>
                             </div>
                         </div>
                         

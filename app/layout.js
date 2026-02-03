@@ -116,6 +116,16 @@ const localBusinessSchema = {
     "opens": "08:00",
     "closes": "17:00"
   },
+  "areaServed": [
+    { "@type": "City", "name": "Gradiška" },
+    { "@type": "City", "name": "Banja Luka" },
+    { "@type": "City", "name": "Laktaši" },
+    { "@type": "City", "name": "Srbac" },
+    { "@type": "City", "name": "Prnjavor" },
+    { "@type": "City", "name": "Prijedor" },
+    "Republika Srpska",
+    "Bosna i Hercegovina"
+  ],
   "sameAs": [
     "https://www.facebook.com/p/LED-Tehnika-100063252848248/",
     "https://www.instagram.com/led_tehnika/"
