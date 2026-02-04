@@ -5,6 +5,7 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from './_components/CartContext';
+import MenuItems from "./_components/MenuItems";
 import ScrollToTop from "./_components/ScrolltoTop";
 
 const inter = Outfit({ subsets: ['latin'] });
@@ -44,15 +45,32 @@ export const metadata = {
     images: ["https://ledtehnika.com/logo-black.png"],
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
+    icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
+    other: [
+      {
+        url: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+      {
+        url: "/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/favicon.png",
+        sizes: "48x48",
+        type: "image/png",
+      },
+    ],
   },
-  manifest: "/site.webmanifest",
   robots: {
     index: true,
     follow: true,
@@ -119,16 +137,6 @@ const localBusinessSchema = {
     "opens": "08:00",
     "closes": "17:00"
   },
-  "areaServed": [
-    { "@type": "City", "name": "Gradiška" },
-    { "@type": "City", "name": "Banja Luka" },
-    { "@type": "City", "name": "Laktaši" },
-    { "@type": "City", "name": "Srbac" },
-    { "@type": "City", "name": "Prnjavor" },
-    { "@type": "City", "name": "Prijedor" },
-    "Republika Srpska",
-    "Bosna i Hercegovina"
-  ],
   "sameAs": [
     "https://www.facebook.com/p/LED-Tehnika-100063252848248/",
     "https://www.instagram.com/led_tehnika/"
@@ -185,6 +193,7 @@ export default function RootLayout({ children }) {
             {children}
           </div>
           <Toaster duration={1000} richColors />
+          <MenuItems />
           <Footer />
         </CartProvider>
       </body>

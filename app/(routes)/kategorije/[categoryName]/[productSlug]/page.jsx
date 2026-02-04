@@ -2,6 +2,7 @@ import ProductDetailPage from '../../_components/ProductDetailPage';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import Script from 'next/script';
 import { generateProductSchema, generateBreadcrumbSchema, generateFAQSchema, generateReviewSchema } from '@/lib/generateSchemas';
+import { truncateAtWord } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
 
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }) {
     const lowerCategory = categoryNameDisplay.toLowerCase();
 
     let description = product.description
-      ? product.description.slice(0, 155).replace(/\n/g, ' ').trim()
+      ? truncateAtWord(product.description.replace(/\n/g, ' ').trim(), 155)
       : `${productName} - ${categoryNameDisplay} na Led Tehnika. Kvalitetni proizvodi po najboljim cijenama.`;
 
     if (price && description.length < 130) {
@@ -80,12 +81,11 @@ export async function generateMetadata({ params }) {
       lowerCategory.includes('motor') ||
       lowerCategory.includes('kapij')
     ) {
-      seoTitle = `${seoTitle} - Motor za kapiju | Led Tehnika`;
+      seoTitle = `${seoTitle} - Motor za kapiju`;
     } else if (categoryNameDisplay) {
-      seoTitle = `${seoTitle} - ${categoryNameDisplay} | Led Tehnika`;
-    } else {
-      seoTitle = `${seoTitle} | Led Tehnika`;
+      seoTitle = `${seoTitle} - ${categoryNameDisplay}`;
     }
+    // Layout template adds " | Led Tehnika"
 
     return {
       title: seoTitle,

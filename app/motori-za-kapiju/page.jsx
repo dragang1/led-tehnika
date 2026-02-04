@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Script from 'next/script'
 import ProductItem from '@/app/_components/ProductItem'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
+import { truncateAtWord } from '@/lib/utils'
 
 const BASE_DOMAIN = 'https://ledtehnika.com'
 
@@ -49,11 +50,12 @@ export async function generateMetadata() {
     const contentText = extractPlainText(stranica.content || stranica.description);
     const baseDesc = stranica.seoDescription || (
       contentText 
-        ? contentText.slice(0, 120).replace(/\n/g, ' ').trim()
+        ? truncateAtWord(contentText.replace(/\n/g, ' ').trim(), 120)
         : `${stranica.title} - Kvalitetni proizvodi na Led Tehnika.`
     );
     const locationSuffix = ' Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor, BiH.';
-    const description = baseDesc.length + locationSuffix.length <= 160 ? baseDesc + locationSuffix : baseDesc.slice(0, 160 - locationSuffix.length).trim() + locationSuffix;
+    const maxBaseLen = 160 - locationSuffix.length;
+    const description = baseDesc.length + locationSuffix.length <= 160 ? baseDesc + locationSuffix : truncateAtWord(baseDesc, maxBaseLen) + locationSuffix;
 
     const imageUrl = stranica.cover?.url 
       ? (stranica.cover.url.startsWith('http') 

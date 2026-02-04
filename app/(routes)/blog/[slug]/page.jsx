@@ -4,6 +4,7 @@ import Script from 'next/script';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
 import { generateBlogPostingSchema } from '@/lib/generateSchemas';
 import { notFound } from 'next/navigation';
+import { truncateAtWord } from '@/lib/utils';
 
 // Blog posts content - can be moved to CMS/API later
 const blogPosts = {
@@ -174,15 +175,16 @@ export async function generateMetadata({ params }) {
     };
   }
 
+  const description = truncateAtWord(post.content.replace(/#/g, '').replace(/\n/g, ' ').trim(), 155);
   return {
     title: `${post.title} | Led Tehnika Blog`,
-    description: post.content.slice(0, 155).replace(/#/g, '').trim(),
+    description,
     alternates: {
       canonical: `https://ledtehnika.com/blog/${slug}`,
     },
     openGraph: {
       title: post.title,
-      description: post.content.slice(0, 155).replace(/#/g, '').trim(),
+      description,
       url: `https://ledtehnika.com/blog/${slug}`,
       siteName: 'Led Tehnika',
       type: 'article',

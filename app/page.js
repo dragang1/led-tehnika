@@ -2,6 +2,7 @@ import GlobalApi from './_utils/GlobalApi';
 import HomeContent from './_components/HomeContent';
 import Script from 'next/script';
 import { generateProductSchema } from '@/lib/generateSchemas';
+import { truncateAtWord } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
 
@@ -22,20 +23,20 @@ export async function generateMetadata() {
     const featured = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
     if (featured?.name) {
       const lead = `Izdvojeno: ${featured.name}. `;
-      description = (lead + DEFAULT_DESCRIPTION).slice(0, 160);
+      description = truncateAtWord(lead + DEFAULT_DESCRIPTION, 160);
     }
   } catch (_) {
     // use default
   }
   return {
-    title: 'Motori za kapije, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
+    title: 'Motori za kapije, LED rasvjeta, Bazenska rasvjeta',
     description,
     alternates: {
       canonical: 'https://ledtehnika.com',
     },
     openGraph: {
       title: 'Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
-      description: description.slice(0, 160),
+      description: description,
       url: 'https://ledtehnika.com',
       siteName: 'Led Tehnika',
       type: 'website',
@@ -50,7 +51,7 @@ export async function generateMetadata() {
     twitter: {
       card: 'summary_large_image',
       title: 'Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
-      description: description.slice(0, 160),
+      description: description,
       images: ['https://ledtehnika.com/logo-black.png'],
     },
   };

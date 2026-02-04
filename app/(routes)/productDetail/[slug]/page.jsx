@@ -1,5 +1,6 @@
 import GlobalApi from '@/app/_utils/GlobalApi';
 import { redirect } from 'next/navigation';
+import { truncateAtWord } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
 
@@ -16,10 +17,10 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    // Return basic metadata (page will redirect anyway)
+    // Return basic metadata (page will redirect anyway). Layout template adds " | Led Tehnika".
     return {
-      title: `${product.name} | Led Tehnika`,
-      description: product.description?.slice(0, 155) || `${product.name} na Led Tehnika`,
+      title: product.name,
+      description: product.description ? truncateAtWord(product.description.replace(/\n/g, ' ').trim(), 155) : `${product.name} na Led Tehnika`,
     };
   } catch (e) {
     return {

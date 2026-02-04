@@ -5,6 +5,7 @@ import Script from 'next/script'
 import { generateCategoryBreadcrumbSchema } from '@/lib/generateSchemas'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
 import Link from 'next/link'
+import { truncateAtWord } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
 
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }) {
     const categoryTitle = category.name
 
     const categoryDescription = category.description 
-      ? category.description.slice(0, 155).replace(/\n/g, ' ').trim()
+      ? truncateAtWord(category.description.replace(/\n/g, ' ').trim(), 155)
       : `${categoryTitle} - Kvalitetni proizvodi na Led Tehnika. Pregled svih proizvoda iz kategorije ${categoryTitle}.`
 
     const imageUrl = category.icon?.url 
@@ -43,8 +44,9 @@ export async function generateMetadata({ params }) {
           : `https://led-backend-62tj.onrender.com${category.icon.url}`)
       : 'https://ledtehnika.com/logo-black.png'
 
+    // Layout template adds " | Led Tehnika"
     return {
-      title: `${categoryTitle} | Led Tehnika`,
+      title: categoryTitle,
       description: categoryDescription,
       alternates: {
         canonical: `${baseDomain}/kategorije/${categoryName}`,
