@@ -1,10 +1,9 @@
 import GlobalApi from './_utils/GlobalApi';
 import HomeContent from './_components/HomeContent';
-import Script from 'next/script';
 import { generateProductSchema } from '@/lib/generateSchemas';
 import { truncateAtWord } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+export const revalidate = 3600; // Revalidate every hour - cached for speed, fresh data in background
 
 const BASE_DOMAIN = 'https://ledtehnika.com';
 
@@ -29,13 +28,13 @@ export async function generateMetadata() {
     // use default
   }
   return {
-    title: 'Motori za kapije, LED rasvjeta, Bazenska rasvjeta',
+    title: 'LED rasvjeta, Bazenska rasvjeta, Motori za kapije',
     description,
     alternates: {
       canonical: 'https://ledtehnika.com',
     },
     openGraph: {
-      title: 'Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
+      title: 'Led Tehnika – LED rasvjeta, motori za kapije i bazenska oprema u BiH',
       description: description,
       url: 'https://ledtehnika.com',
       siteName: 'Led Tehnika',
@@ -45,12 +44,12 @@ export async function generateMetadata() {
         url: 'https://ledtehnika.com/logo-black.png',
         width: 1200,
         height: 630,
-        alt: 'Led Tehnika - Motor za kapiju, LED rasvjeta',
+        alt: 'Led Tehnika - LED rasvjeta, Bazenska rasvjeta i Motori za kapije',
       }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
+      title: 'Led Tehnika – LED rasvjeta, motori za kapije i bazenska oprema u BiH',
       description: description,
       images: ['https://ledtehnika.com/logo-black.png'],
     },
@@ -111,11 +110,10 @@ export default async function Home() {
   return (
     <>
       {featuredProductSchema && (
-        <Script
+        <script
           id="featured-product-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(featuredProductSchema) }}
-          strategy="beforeInteractive"
         />
       )}
       <HomeContent

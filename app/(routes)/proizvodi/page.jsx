@@ -1,11 +1,10 @@
 import GlobalApi from '@/app/_utils/GlobalApi';
 import React from 'react';
-import Script from 'next/script';
 import ProductList from '../../_components/ProductList';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
 import { generateItemListSchema } from '@/lib/generateSchemas';
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+export const revalidate = 3600; // Revalidate every hour - cached for speed, fresh data in background
 
 export const metadata = {
   title: 'Svi proizvodi - Motor za kapiju, LED rasvjeta, Bazenska rasvjeta | Led Tehnika',
@@ -53,13 +52,11 @@ async function AllProductsPage() {
     return (
         <>
             {itemListSchema && (
-                <Script
+                <script
                     id="itemlist-schema"
                     type="application/ld+json"
-                    strategy="beforeInteractive"
-                >
-                    {JSON.stringify(itemListSchema)}
-                </Script>
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+                />
             )}
             <Breadcrumbs items={breadcrumbItems} />
             <div className='px-4 md:px-8 lg:px-16 max-w-screen-xl mx-auto'>

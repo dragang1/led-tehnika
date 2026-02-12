@@ -1,10 +1,9 @@
 import ProductDetailPage from '../../_components/ProductDetailPage';
 import GlobalApi from '@/app/_utils/GlobalApi';
-import Script from 'next/script';
 import { generateProductSchema, generateBreadcrumbSchema, generateFAQSchema, generateReviewSchema } from '@/lib/generateSchemas';
 import { truncateAtWord } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+export const revalidate = 3600; // Revalidate every hour - cached for speed, fresh data in background
 
 export async function generateMetadata({ params }) {
   const { productSlug } = await params;
@@ -81,7 +80,14 @@ export async function generateMetadata({ params }) {
       lowerCategory.includes('motor') ||
       lowerCategory.includes('kapij')
     ) {
-      seoTitle = `${seoTitle} - Motor za kapiju`;
+      // Long-tail suffix: extract weight capacity from name if present (e.g. "600" -> "do 600kg")
+      const weightMatch = productName.match(/(\d{3,4})\s*(kg)?/i);
+      const weightSuffix = weightMatch ? ` do ${weightMatch[1]}kg` : '';
+      // Determine gate type from name
+      const isKlizna = lowerName.includes('klizn') || lowerName.includes('sliding');
+      const isKrilna = lowerName.includes('kriln') || lowerName.includes('swing');
+      const gateType = isKlizna ? 'kliznu' : isKrilna ? 'krilnu' : 'kliznu';
+      seoTitle = `${seoTitle} – Motor za ${gateType} kapiju${weightSuffix}`;
     } else if (categoryNameDisplay) {
       seoTitle = `${seoTitle} - ${categoryNameDisplay}`;
     }
@@ -172,25 +178,25 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <Script
+      <script
         id="product-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
-      <Script
+      <script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {faqSchema && (
-        <Script
+        <script
           id="faq-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
       {reviewSchema && (
-        <Script
+        <script
           id="review-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}

@@ -1,13 +1,12 @@
 import GlobalApi from '@/app/_utils/GlobalApi'
 import ProductList from '@/app/_components/ProductList'
 import TopCategoryList from '../_components/TopCategoryList'
-import Script from 'next/script'
 import { generateCategoryBreadcrumbSchema } from '@/lib/generateSchemas'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
 import Link from 'next/link'
 import { truncateAtWord } from '@/lib/utils'
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+export const revalidate = 3600; // Revalidate every hour - cached for speed, fresh data in background
 
 export async function generateMetadata({ params }) {
   const { categoryName } = await params
@@ -152,7 +151,7 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <Script
+      <script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}

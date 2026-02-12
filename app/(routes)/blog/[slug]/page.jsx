@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Script from 'next/script';
 import Breadcrumbs from '@/app/_components/Breadcrumbs';
 import { generateBlogPostingSchema } from '@/lib/generateSchemas';
 import { notFound } from 'next/navigation';
@@ -218,13 +217,11 @@ export default function BlogPostPage({ params }) {
 
   return (
     <>
-      <Script
+      <script
         id="blog-posting-schema"
         type="application/ld+json"
-        strategy="beforeInteractive"
-      >
-        {JSON.stringify(blogPostingSchema)}
-      </Script>
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }}
+      />
       <Breadcrumbs items={breadcrumbItems} />
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 sm:p-12">

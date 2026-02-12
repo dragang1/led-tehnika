@@ -1,7 +1,6 @@
 import GlobalApi from '@/app/_utils/GlobalApi'
 import Image from 'next/image'
 import Link from 'next/link'
-import Script from 'next/script'
 import ProductItem from '@/app/_components/ProductItem'
 import Breadcrumbs from '@/app/_components/Breadcrumbs'
 import { truncateAtWord } from '@/lib/utils'
@@ -16,8 +15,8 @@ export async function generateMetadata() {
     
     if (!stranica) {
       return {
-        title: 'Motori za kapiju | Led Tehnika',
-        description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
+        title: 'Motori za kapiju | Motor za kliznu kapiju – setovi do 600kg',
+        description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Komplet setovi sa garancijom. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
         alternates: {
           canonical: `${baseDomain}/motori-za-kapiju`,
         },
@@ -46,7 +45,7 @@ export async function generateMetadata() {
       return '';
     };
 
-    const title = stranica.seoTitle || `${stranica.title} | Led Tehnika`
+    const title = stranica.seoTitle || `${stranica.title} | Motor za kliznu kapiju – setovi do 600kg`
     const contentText = extractPlainText(stranica.content || stranica.description);
     const baseDesc = stranica.seoDescription || (
       contentText 
@@ -92,8 +91,8 @@ export async function generateMetadata() {
     }
   } catch (e) {
     return {
-      title: 'Motori za kapiju | Led Tehnika',
-      description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
+      title: 'Motori za kapiju | Motor za kliznu kapiju – setovi do 600kg',
+      description: 'Motori za kapiju i oprema za automatizaciju kliznih i krilnih kapija. Komplet setovi sa garancijom. Dostava: Gradiška, Banja Luka, Laktaši, Srbac, Prnjavor, Prijedor i cijela BiH.',
       alternates: {
         canonical: `${baseDomain}/motori-za-kapiju`,
       },
@@ -1024,7 +1023,7 @@ export default async function Page() {
 
   return (
     <>
-      <Script
+      <script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
@@ -1034,7 +1033,7 @@ export default async function Page() {
       {/* Hero Section */}
       <div className='text-center mb-12'>
         <h1 className='text-4xl md:text-5xl font-bold text-gray-900 mb-4'>
-          {stranica.title}
+          {stranica.title || 'Motori za kapiju – Automatizacija kliznih i krilnih kapija'}
         </h1>
         <p className='text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed'>
           {subtitle}

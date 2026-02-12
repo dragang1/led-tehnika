@@ -1,5 +1,4 @@
 import { Outfit } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
@@ -12,7 +11,7 @@ const inter = Outfit({ subsets: ['latin'] });
 
 export const metadata = {
   title: {
-    default: "Led Tehnika – Motor za kapiju, LED rasvjeta, Bazenska rasvjeta",
+    default: "Led Tehnika – LED rasvjeta, Bazenska rasvjeta i Motori za kapije",
     template: "%s | Led Tehnika"
   },
   description:
@@ -22,9 +21,9 @@ export const metadata = {
   },
   metadataBase: new URL("https://ledtehnika.com"), 
   openGraph: {
-    title: "Led Tehnika – Motor za kapiju, LED i bazenska rasvjeta",
+    title: "Led Tehnika – LED rasvjeta, Bazenska rasvjeta i Motori za kapije",
     description:
-      "motor za kapiju,Led rasvjeta,Bazenska rasvjeta,Kaloliferi,Grijanje,motori za kapije,Led traka,zidna lampa",
+      "Led Tehnika je ekskluzivni uvoznik i distributer LED rasvjete, bazenske rasvjete i motora za kapije u Bosni i Hercegovini. Kvalitetni proizvodi po najboljim cijenama.",
     url: "https://ledtehnika.com",
     siteName: "Led Tehnika",
     images: [
@@ -32,7 +31,7 @@ export const metadata = {
         url: "https://ledtehnika.com/logo-black.png",
         width: 1200,
         height: 630,
-        alt: "Led Tehnika - Motor za kapiju, LED rasvjeta",
+        alt: "Led Tehnika - LED rasvjeta, Bazenska rasvjeta i Motori za kapije",
       },
     ],
     type: "website",
@@ -40,8 +39,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Led Tehnika – Motor za kapiju, LED rasvjeta",
-    description: "Ekskluzivni uvoznik motora za kapije, LED i bazenske rasvjete",
+    title: "Led Tehnika – LED rasvjeta, Bazenska rasvjeta i Motori za kapije",
+    description: "Led Tehnika je ekskluzivni uvoznik i distributer LED rasvjete, bazenske rasvjete i motora za kapije u Bosni i Hercegovini. Kvalitetni proizvodi po najboljim cijenama.",
     images: ["https://ledtehnika.com/logo-black.png"],
   },
   icons: {
@@ -171,17 +170,17 @@ export default function RootLayout({ children }) {
   return (
     <html lang="bs">
       <body className={inter.className}>
-        <Script
+        <script
           id="organization-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
-        <Script
+        <script
           id="localbusiness-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
-        <Script
+        <script
           id="website-schema"
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

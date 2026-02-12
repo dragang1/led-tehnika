@@ -5,7 +5,7 @@ import { useCart } from '../../_components/CartContext'; // Adjust this path bas
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import Head from 'next/head';
+// noindex/nofollow is now handled by layout.js metadata
 
 function CartPage() {
     const { cart, removeFromCart } = useCart();
@@ -43,14 +43,6 @@ function CartPage() {
     return (
         <>
 
-
-<Head>
-  <title>Led Tehnika |  Tvoja korpa</title>
- 
-  <meta name="robots" content="noindex, nofollow" />
-
-  
-</Head>
 
         <div className='p-7 bg-white text-black'>
             <h1 className='text-3xl font-bold mb-5'>Your Cart</h1>

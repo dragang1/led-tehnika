@@ -2,7 +2,7 @@ import GlobalApi from '@/app/_utils/GlobalApi';
 import { redirect } from 'next/navigation';
 import { truncateAtWord } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic'; // Force dynamic rendering to get fresh data from Strapi
+export const revalidate = 3600; // Revalidate every hour - cached for speed, fresh data in background
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
