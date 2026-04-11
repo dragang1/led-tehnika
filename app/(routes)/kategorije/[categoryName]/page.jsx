@@ -191,7 +191,7 @@ export default async function Page({ params }) {
             <ProductList productList={products} limit={products.length} />
           ) : (
             <p className="text-center text-gray-500 text-lg">
-              Nema proizvoda u ovoj kategoriji.
+              Proizvodi za ovu kategoriju stižu uskoro.
             </p>
           )}
         </div>
