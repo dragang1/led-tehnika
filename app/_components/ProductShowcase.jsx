@@ -5,20 +5,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeftCircle, ArrowRightCircle } from 'lucide-react';
-import GlobalApi from '@/app/_utils/GlobalApi';
-
-// Helper function to get category slug from product
-const getCategorySlug = (product) => {
-  if (!product) return 'nepoznata-kategorija';
-  
-  // Data is already flattened - kategorije is an object with name (no slug)
-  const category = product.kategorije || {};
-  if (category.name) {
-    return category.name.toLowerCase().replace(/\s+/g, '-');
-  }
-  
-  return 'nepoznata-kategorija';
-};
+import CmsApi from '@/lib/cmsClient';
+import { getCategorySlug } from '@/lib/cms/utils';
 
 const ProductShowcase = () => {
   const [productList, setProductList] = useState([]);
@@ -29,8 +17,8 @@ const ProductShowcase = () => {
     const fetchProducts = async () => {
       try {
         // Fetch featured product first
-        const featuredProduct = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
-        const res = await GlobalApi.getAllProducts();
+        const featuredProduct = await CmsApi.getProductBySlug('motor-za-kapiju-set');
+        const res = await CmsApi.getAllProducts();
         
         // Filter out featured product from all products
         const otherProducts = (res || []).filter(
@@ -75,7 +63,7 @@ const ProductShowcase = () => {
   const imageUrl = currentProduct?.image?.[0]?.url;
   const productSlug = currentProduct?.slug || '';
   const productName = currentProduct?.name || '';
-  const categorySlug = getCategorySlug(currentProduct);
+  const categorySlug = getCategorySlug(currentProduct?.kategorije) || 'nepoznata-kategorija';
 
   return (
     <div className="w-full max-w-[1200px] mx-auto p-6 sm:p-10 bg-white rounded-2xl shadow-2xl relative overflow-hidden border border-gray-200 min-h-[500px]">

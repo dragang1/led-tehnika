@@ -1,26 +1,32 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { legacyRedirects } from './redirects.config.js';
+
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true, // Helps catch potential issues in development
+    reactStrictMode: true,
+    serverExternalPackages: ['@keystatic/core'],
+    turbopack: {
+        root: projectRoot,
+    },
+    async redirects() {
+        return legacyRedirects;
+    },
     images: {
         remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: 'led-backend-62tj.onrender.com',
-                pathname: '/**',
-            },
             {
                 protocol: 'https',
                 hostname: 'res.cloudinary.com',
                 pathname: '/**',
             },
             {
-                protocol: 'https', // Make sure to use https for Render
-                hostname: 'localhost',
-                port: '1337', // Adjust if you're running on a different port locally
-                pathname: '/**', // Allow all paths for local development
+                protocol: 'https',
+                hostname: 'ledtehnika.com',
+                pathname: '/**',
             },
         ],
-        // Image optimization settings
         formats: ['image/avif', 'image/webp'],
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -28,8 +34,5 @@ const nextConfig = {
         qualities: [75, 80],
     },
 };
-
-
-
 
 export default nextConfig;

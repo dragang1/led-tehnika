@@ -16,7 +16,7 @@ import { useCart } from './CartContext';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import CategoryDropdown from './CategoryDropdown';
-import GlobalApi from '../_utils/GlobalApi';
+import CmsApi from '@/lib/cmsClient';
 import { useRouter } from 'next/navigation';
 
 function MenuItems() {
@@ -25,7 +25,7 @@ function MenuItems() {
     const totalCartItem = getTotalCartItems();
     const [categoryList, setCategoryList] = useState([]);
     const getCategoryList = () => {
-        GlobalApi.getCategory().then(res => {
+        CmsApi.getCategory().then(res => {
             setCategoryList(res.data.data);
         });
     };

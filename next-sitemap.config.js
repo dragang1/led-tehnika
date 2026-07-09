@@ -7,7 +7,7 @@ export default {
   siteUrl: 'https://ledtehnika.com',
   generateRobotsTxt: true,
   sitemapSize: 5000,
-  exclude: ["/cartPage", "/orderForm"],
+  exclude: ["/cartPage", "/orderForm", "/productDetail/*", "/keystatic/*"],
   changefreq: 'daily',
   priority: 0.7,
   additionalPaths: async () => {

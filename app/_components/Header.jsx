@@ -3,7 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, X } from 'lucide-react';
 import Image from 'next/image';
-import GlobalApi from '../_utils/GlobalApi';
+import CmsApi from '@/lib/cmsClient';
+import { getCategorySlug } from '@/lib/cms/utils';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useCart } from './CartContext';
@@ -30,7 +31,7 @@ function Header() {
     const router = useRouter();
 
     useEffect(() => {
-        GlobalApi.getCategory().then(res => {
+        CmsApi.getCategory().then(res => {
             setCategoryList(res.data.data);
         });
     }, []);
@@ -187,7 +188,7 @@ function Header() {
           <div className="mb-2">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-1">Kategorije</p>
             {categoryList?.map((cat, index) => {
-              const categorySlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : '';
+              const categorySlug = getCategorySlug(cat);
               return (
                 <motion.div
                   key={cat.id || index}

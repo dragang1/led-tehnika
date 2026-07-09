@@ -12,15 +12,11 @@ import { LayoutGrid, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { normalizeImageUrl } from '@/lib/getImageUrl';
+import { getCategorySlug } from '@/lib/cms/utils';
+
 function CategoryDropdown({ categoryList }) {
-  const getImageUrl = (iconUrl) => {
-    if (!iconUrl) return null;
-    if (iconUrl.startsWith('http')) return iconUrl;
-    if (iconUrl.startsWith('/uploads/') || iconUrl.startsWith('/api/')) {
-      return `https://led-backend-62tj.onrender.com${iconUrl}`;
-    }
-    return iconUrl;
-  };
+  const getImageUrl = (iconUrl) => normalizeImageUrl(iconUrl);
 
   return (
     <div className='md:flex'>
@@ -40,7 +36,7 @@ function CategoryDropdown({ categoryList }) {
           <div className="py-1">
             {categoryList?.map((cat) => {
               const iconUrl = getImageUrl(cat?.icon?.url);
-              const categorySlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : '';
+              const categorySlug = getCategorySlug(cat);
 
               return (
                 <Link href={`/kategorije/${categorySlug}`} key={cat.id || cat.name}>

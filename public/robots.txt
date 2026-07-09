@@ -2,10 +2,6 @@
 User-agent: *
 Allow: /
 
-# Disallow cart and order pages
-Disallow: /cartPage
-Disallow: /orderForm
-
 # Host
 Host: https://ledtehnika.com
 

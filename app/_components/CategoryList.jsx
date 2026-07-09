@@ -4,15 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
+import { normalizeImageUrl } from '@/lib/getImageUrl';
+import { getCategorySlug } from '@/lib/cms/utils';
+
 function CategoryList({ categoryList }) {
-  const getImageUrl = (iconUrl) => {
-    if (!iconUrl) return null;
-    if (iconUrl.startsWith('http')) return iconUrl;
-    if (iconUrl.startsWith('/uploads/') || iconUrl.startsWith('/api/')) {
-      return `https://led-backend-62tj.onrender.com${iconUrl}`;
-    }
-    return iconUrl;
-  };
+  const getImageUrl = (iconUrl) => normalizeImageUrl(iconUrl);
 
   // Color gradients for categories without images
   const gradients = [
@@ -29,7 +25,7 @@ function CategoryList({ categoryList }) {
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mt-2 sm:p-2'>
         {categoryList.map((cat, index) => {
           const imageUrl = getImageUrl(cat?.icon?.url);
-          const categorySlug = cat.name ? cat.name.toLowerCase().replace(/\s+/g, '-') : '';
+          const categorySlug = getCategorySlug(cat);
           const gradientClass = gradients[index % gradients.length];
 
           return (

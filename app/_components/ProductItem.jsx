@@ -1,5 +1,6 @@
 'use client'
 import { useCart } from '@/app/_components/CartContext'
+import { getCategorySlug } from '@/lib/cms/utils'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { toast } from 'sonner'
@@ -7,6 +8,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ShoppingCart, Eye } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { getImageUrl } from '@/lib/getImageUrl'
 
 function ProductItem({ product }) {
   const { addToCart } = useCart()
@@ -26,15 +28,11 @@ function ProductItem({ product }) {
   // Kategorija - data is already flattened, kategorije is an object with name (no slug)
   const category = product.kategorije || {}
   const categoryName = category.name || ''
-  const categorySlug = categoryName ? categoryName.toLowerCase().replace(/\s+/g, '-') : 'nepoznata-kategorija'
+  const categorySlug = getCategorySlug(category) || 'nepoznata-kategorija'
 
   // Slika - API uses 'image' not 'images'
   const imageData = product.image?.[0] || {}
-  const imageUrl = imageData.url
-    ? imageData.url.startsWith('http')
-      ? imageData.url
-      : `https://led-backend-62tj.onrender.com${imageData.url}`
-    : null
+  const imageUrl = imageData.url ? getImageUrl(imageData) : null
 
   const handleAddToCart = (e) => {
     e.preventDefault()

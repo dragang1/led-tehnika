@@ -7,6 +7,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image"
+import { getImageUrl } from "@/lib/getImageUrl"
 
 
 
@@ -20,7 +21,7 @@ function Slider({ sliderList }) {
                     <CarouselItem key={index}>
                         <div className="relative w-full h-[200px] md:h-[400px]">
                             <Image 
-                                src={process.env.NEXT_PUBLIC_BACKEND_BASE_URL + slider?.image[0]?.url} 
+                                src={getImageUrl(slider?.image?.[0]?.url || slider?.url)} 
                                 fill
                                 alt="slider" 
                                 className='object-cover rounded-2xl'

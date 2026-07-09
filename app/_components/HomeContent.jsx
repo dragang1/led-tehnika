@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import CategoryList from './CategoryList';
 import ProductList from './ProductList';
-import ProductShowcase from './ProductShowcase';
 import Hero from './Hero';
 
 export default function HomeContent({ categoryList, productList, initialFeaturedProduct, initialSliderData }) {

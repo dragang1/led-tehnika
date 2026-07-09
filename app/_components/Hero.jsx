@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import GlobalApi from '../_utils/GlobalApi';
+import CmsApi from '@/lib/cmsClient';
+import { getCategorySlug } from '@/lib/cms/utils';
+import { getImageUrl } from '@/lib/getImageUrl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingCart, ArrowRight } from 'lucide-react';
 
@@ -47,26 +49,23 @@ function Hero({ children, initialFeaturedProduct = null, initialSliderData = [] 
         const fetchData = async () => {
             try {
                 if (initialFeaturedProduct == null) {
-                    const product = await GlobalApi.getProductBySlug('motor-za-kapiju-set');
+                    const product = await CmsApi.getProductBySlug('motor-za-kapiju-set');
                     if (product?.image?.[0]?.url) {
                         const category = product.kategorije || {};
-                        const categorySlug = category.name ? category.name.toLowerCase().replace(/\s+/g, '-') : 'automatizacija';
+                        const categorySlug = getCategorySlug(category) || 'automatizacija';
                         const productImage = product.image[0].url;
-                        let imageUrl = productImage.startsWith('http') ? productImage
-                            : (productImage.startsWith('/uploads/') || productImage.startsWith('/api/'))
-                                ? `https://led-backend-62tj.onrender.com${productImage}`
-                                : productImage.startsWith('/') ? `https://ledtehnika.com${productImage}` : `https://ledtehnika.com/${productImage}`;
+                        let imageUrl = getImageUrl(productImage);
                         setFeaturedProduct({ ...product, categorySlug, imageUrl });
                     }
                 }
                 if (!initialSliderData?.length) {
-                    const response = await GlobalApi.getSliders();
+                    const response = await CmsApi.getSliders();
                     if (response?.[0]?.sliders) {
                         const sliderItems = response[0].sliders
                             .map((slider, index) => {
                                 const url = slider?.url?.replace(/^\//, '');
                                 if (!url) return null;
-                                const imageUrl = url.startsWith('http') ? url : (url.startsWith('/uploads/') || url.startsWith('/api/')) ? `https://led-backend-62tj.onrender.com${url}` : url.startsWith('/') ? `https://ledtehnika.com${url}` : `https://ledtehnika.com/${url}`;
+                                const imageUrl = getImageUrl(url);
                                 return { imageUrl, title: slider?.title || sliderMessages[index % sliderMessages.length].title, description: slider?.description || sliderMessages[index % sliderMessages.length].description, highlight: sliderMessages[index % sliderMessages.length].highlight };
                             })
                             .filter(Boolean);

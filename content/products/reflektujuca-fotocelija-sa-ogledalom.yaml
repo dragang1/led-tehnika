@@ -1,0 +1,26 @@
+slug: "reflektujuca-fotocelija-sa-ogledalom"
+title: "Reflektujuća fotoćelija sa ogledalom"
+price: 70
+description: |
+  Reflektujuća fotoćelija sa ogledalom za automatske kapije služi za detekciju prepreka i povećanje sigurnosti pri otvaranju i zatvaranju kapije. Idealan je dodatak sistemima automatizacije kapija jer sprječava zatvaranje kapije kada se u zoni detekcije nalazi vozilo, osoba ili prepreka.
+  
+  Tehničke specifikacije
+  
+  Tip: reflektujuća fotoćelija sa ogledalom
+  
+  Domet: do 10 m
+  
+  Radni napon: 12–36 V DC / 10–24 V AC
+  
+  Relejni izlaz: NO/NC
+  
+  Stepen zaštite: IP67
+  
+  Radna temperatura: -25°C ~ +60°C
+  
+  Polarizovani filter: zaštita od smetnji refleksije svjetlosti sa vozila
+category: "automatizacija"
+updatedAt: "2026-01-25T13:33:46.723Z"
+images:
+  - url: "https://res.cloudinary.com/di4fsjiqk/image/upload/v1748449022/foto_elija_obicna_b8b4e5c95d.png"
+    alt: "Reflektujuća fotoćelija sa ogledalom za motor za kapiju"
