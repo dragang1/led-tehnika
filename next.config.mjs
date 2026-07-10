@@ -8,6 +8,11 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
     reactStrictMode: true,
     serverExternalPackages: ['@keystatic/core'],
+    outputFileTracingIncludes: {
+        '/api/cms': ['./content/**/*', './keystatic.config.js'],
+        '/api/keystatic/[...params]': ['./content/**/*', './keystatic.config.js'],
+        '/*': ['./content/**/*', './keystatic.config.js'],
+    },
     turbopack: {
         root: projectRoot,
     },

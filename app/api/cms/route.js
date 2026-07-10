@@ -43,6 +43,9 @@ export async function GET(request) {
     }
   } catch (error) {
     console.error('CMS API error:', error);
-    return Response.json({ error: 'CMS read failed' }, { status: 500 });
+    return Response.json(
+      { error: 'CMS read failed', message: error?.message || String(error) },
+      { status: 500 }
+    );
   }
 }
